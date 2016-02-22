@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from DisasterReporting.views import hello
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^hello/$', hello),
 ]
+
+"""
+browser request -> setting ROOT_URLCONF -> urls.py -> views.py --> template
+"""
