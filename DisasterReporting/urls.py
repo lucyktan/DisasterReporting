@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from DisasterReporting.views import hello
+from DisasterReporting.views import createaccount
 
 urlpatterns = [
-    url(r'^createaccount/$', views.createaccount),
+    url(r'^createaccount/$', createaccount),
 ]
 
 """

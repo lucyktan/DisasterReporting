@@ -6,6 +6,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Account(models.Model):
 	user = models.OneToOneField(User)
-	email = models.EmailField(default='Email Address')
-	first_name = models.CharField(default='First Name')
-	last_name = models.CharField(default='Last Name')
+	email = models.EmailField(max_length=50, default='Email Address')
+	first_name = models.CharField(max_length=50, default='First Name')
+	last_name = models.CharField(max_length=50, default='Last Name')
