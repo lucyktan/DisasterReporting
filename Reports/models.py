@@ -19,7 +19,7 @@ class Report(models.Model):
     owned_less_than_30_years=models.IntegerField()
     predisaster_value = models.DecimalField(max_digits=50, decimal_places=2)
 
-    normal_water = models.DecimalField(max_digits=50, decimal_places=2)
+    normal_water = models.CharField(max_length=50)
 
     normal_destroyed_0 = models.IntegerField()
     normal_destroyed_1 = models.IntegerField()
