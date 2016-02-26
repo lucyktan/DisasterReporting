@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Accounts',
     'Reports',
+    'DisasterReporting',
 ]
 
 MIDDLEWARE_CLASSES = [

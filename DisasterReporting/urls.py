@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from DisasterReporting.views import createaccount
+from DisasterReporting.views import success
+from DisasterReporting.views import login
 
 urlpatterns = [
     url(r'^createaccount/$', createaccount),
+    url(r'^success/$', success),
+    url(r'^login/$', login),
 ]
 
 """
