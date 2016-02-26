@@ -18,7 +18,7 @@ from django.contrib import admin
 from DisasterReporting.views import hello
 
 urlpatterns = [
-    url(r'^hello/$', hello),
+    url(r'^createaccount/$', views.createaccount),
 ]
 
 """
