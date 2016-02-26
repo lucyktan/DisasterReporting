@@ -7,6 +7,7 @@ def get_form(request):
     if request.method == 'POST':
         form = DisasterForm(request.POST)
         if form.is_valid():
+            form.save()
             return HttpResponseRedirect('/results/')
     else:
         form = DisasterForm()

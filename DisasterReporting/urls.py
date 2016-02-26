@@ -14,10 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from DisasterReporting.views import get_form
-from DisasterReporting.views import show_results
+from Reports import views
 
 urlpatterns = [
-    url(r'^form/', get_form),
-    url(r'^results/', show_results),
+    url(r'^form/', views.get_form),
+    url(r'^results/', views.show_results),
 ]
