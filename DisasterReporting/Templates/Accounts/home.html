@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% block body %}
+{% if user.is_authenticated %}
+    You are logged in.
+{% else %}
+    You are not logged in. 
+{% endif %}
+
+{% endblock %}
+</html>

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
 from Accounts.models import Account
@@ -52,5 +52,6 @@ class LoginForm(forms.Form):
     def login(self, request):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
-        user = authenticate(email=email, password=password)
-        return user 
+        user = authenticate(username=email, password=password)
+        login(request, user)
+    

@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'DisasterReporting.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'disasterreporting',
+        'NAME': 'disaster',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

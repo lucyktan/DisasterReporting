@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 
 from DisasterReporting.forms import CreateUserForm, LoginForm
 
+def home(request):
+    return render(request, 'home.html')
 
 def createaccount(request):
     if request.method == 'POST':
@@ -17,15 +19,16 @@ def createaccount(request):
         form = CreateUserForm(request.POST)
     return render(request, 'Accounts/createaccount.html', {'form': form})
 
-def success(request):
-    return HttpResponse('User logged in successfully.')
-
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             form.login(request)
-            return HttpResponseRedirect('/success/')
+            return HttpResponseRedirect('/home/')
     else:
         form = LoginForm(request.POST)
     return render(request, 'Accounts/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/home/')
