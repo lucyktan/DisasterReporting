@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% block body %}
+<div id="content1">
+{% if user.is_authenticated %}
+    You are logged in.
+{% else %}
+    You are not logged in. 
+{% endif %}
+</div>
+
+<style>
+#content1{
+	background-image: url("hurricane.jpg");
+}
+</style>
+
+{% endblock %}
+</html>

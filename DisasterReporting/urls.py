@@ -15,14 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from DisasterReporting.views import home
 from DisasterReporting.views import createaccount
-from DisasterReporting.views import success
 from DisasterReporting.views import login
+from DisasterReporting.views import logout_view
 
 urlpatterns = [
+    url(r'^$', home),
+    url(r'^home/$', home),
     url(r'^createaccount/$', createaccount),
-    url(r'^success/$', success),
-    url(r'^login/$', login),
+    url(r'^login/$', login),    
+    url(r'^logout/$', logout_view),
 ]
 
 """

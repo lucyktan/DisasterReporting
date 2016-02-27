@@ -1,5 +1,26 @@
-<form action="/createaccount/" method="post">
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+
+{% block body %}
+
+<div id="content1">
+	<form action="/createaccount/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" style="text-align: center"/>
 </form>
+</div>
+
+<style>
+
+#content1{
+	margin: 6% auto auto auto;
+	width: 13%;
+}
+
+</style>
+
+{% endblock %}
+</html>
+
