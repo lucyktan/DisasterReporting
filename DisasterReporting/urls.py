@@ -19,6 +19,7 @@ from DisasterReporting.views import home
 from DisasterReporting.views import createaccount
 from DisasterReporting.views import login
 from DisasterReporting.views import logout_view
+from Reports import views
 
 urlpatterns = [
     url(r'^$', home),
@@ -26,7 +27,10 @@ urlpatterns = [
     url(r'^createaccount/$', createaccount),
     url(r'^login/$', login),    
     url(r'^logout/$', logout_view),
-]
+    url(r'^form/', views.get_form),
+    url(r'^results/', views.show_results),
+    ]
+
 
 """
 browser request -> setting ROOT_URLCONF -> urls.py -> views.py --> template
