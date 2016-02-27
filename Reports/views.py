@@ -7,6 +7,9 @@ from Reports.models import Report
 from forms import DisasterForm
 
 def get_form(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/login/')
+        
     if request.method == 'POST':
         form = DisasterForm(request.POST)
         if form.is_valid():
