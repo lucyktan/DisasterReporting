@@ -16,7 +16,7 @@ def createaccount(request):
             form.create_new_account(request)
             return HttpResponseRedirect('/login/')
     else:
-        form = CreateUserForm(request.POST)
+        form = CreateUserForm()
     return render(request, 'Accounts/createaccount.html', {'form': form})
 
 def login(request):
@@ -26,7 +26,7 @@ def login(request):
             form.login(request)
             return HttpResponseRedirect('/home/')
     else:
-        form = LoginForm(request.POST)
+        form = LoginForm()
     return render(request, 'Accounts/login.html', {'form': form})
 
 def logout_view(request):

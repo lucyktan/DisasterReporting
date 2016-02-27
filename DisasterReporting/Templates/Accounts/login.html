@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 
 <!DOCTYPE html>
+
 {% block body %}
-<form action="/login/" method="post">
+<div id="content1">
+	<form action="/login/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
-</form>
+	</form>
+</div>
+
+<style>
+
+#content1{
+	margin: 6% auto auto auto;
+	width: 13%;
+}
+
+</style>
+
 {% endblock %}
 </html>
