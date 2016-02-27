@@ -15,7 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from DisasterReporting.views import createaccount
+from DisasterReporting.views import success
+from DisasterReporting.views import login
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^createaccount/$', createaccount),
+    url(r'^success/$', success),
+    url(r'^login/$', login),
 ]
+
+"""
+browser request -> setting ROOT_URLCONF -> urls.py -> views.py --> template
+"""
