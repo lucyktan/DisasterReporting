@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
-
 from django.db import models
 
-#Create your models here.
+"""Historical data from FEMA's PDA documents"""
 class disaster_history(models.Model):
     dishist_id = models.IntegerField()
     disasterNumber = models.IntegerField()
@@ -15,6 +14,7 @@ class disaster_history(models.Model):
     incidentType = models.CharField(max_length=16)
     year = models.IntegerField()
 
+"""Property values data from Zillow"""
 class homevalue(models.Model):
     class Meta:
         app_label = 'Reports'
@@ -24,6 +24,8 @@ class homevalue(models.Model):
     rent = models.IntegerField()
     def __str__(self):
         return homevalue.content
+
+"""Historical disaster data from property owners provided by FEMA"""       
 class owners(models.Model):
     owners_id = models.IntegerField()
     disasterNumber = models.IntegerField()
@@ -46,6 +48,7 @@ class owners(models.Model):
     ApprovedBetween25001AndMax = models.IntegerField()
     TotalMaxGrants = models.IntegerField()
 
+"""Historical disaster data from property renters provided by FEMA"""
 class renters(models.Model):
     renters_id = models.IntegerField()
     disasterNumber = models.IntegerField()
@@ -66,7 +69,7 @@ class renters(models.Model):
     ApprovedBetween25001AndMax = models.IntegerField()
     TotalMaxGrants = models.IntegerField()
 
-# Create your models here.
+"""Submitted information from the Report Damage form"""
 class Report(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

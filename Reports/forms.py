@@ -1,3 +1,5 @@
+"""The Report damage form"""
+
 import datetime
 from django import forms
 from models import Report

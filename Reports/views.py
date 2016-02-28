@@ -1,10 +1,9 @@
 from django.shortcuts import render
-
-
 from django.http import HttpResponseRedirect
-
 from Reports.models import Report
 from forms import DisasterForm
+
+"""Renders the Report Damage form depending on whether the user is logged in"""
 
 def get_form(request):
     if not request.user.is_authenticated():
