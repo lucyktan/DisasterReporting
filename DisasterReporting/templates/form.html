@@ -41,23 +41,73 @@
             $('#id_owned_less_than_30_years').parent().show();
         }
     }
-    function check_residence(){
-        var text=$('#id_type_of_residence').find(":selected").text();
-         if(text==='Single Family'||text==='Multi-Family'){
-            $('[id^=id_manufactured]').parent().hide();
-            $('[id^=id_normal]').parent().show();
-         }else if(text==='Manufactured Housing Unit'){
-            $('[id^=id_manufactured]').parent().show();
-            $('[id^=id_normal]').parent().hide();
-         }else{
-            $('[id^=id_manufactured]').parent().hide();
-            $('[id^=id_normal]').parent().hide();
-         }
+
+    // function check_residence(){
+    //     var text=$('#id_type_of_residence').find(":selected").text();
+    //      if(text==='Single Family'||text==='Multi-Family'){
+    //         $('[id^=id_manufactured]').parent().hide();
+    //         $('[id^=id_normal]').parent().show();
+    //      }else if(text==='Manufactured Housing Unit'){
+    //         $('[id^=id_manufactured]').parent().show();
+    //         $('[id^=id_normal]').parent().hide();
+    //      }else{
+    //         $('[id^=id_manufactured]').parent().hide();
+    //         $('[id^=id_normal]').parent().hide();
+    //      }
+    // }
+
+    function check_waterdamage() {
+        var water=$('#id_waterdamage').find(":selected").text();
+        if(water==='Yes'){
+            $('[id^=id.water_mobilehome]').parent().show();
+            check_mobilehome();
+        }else{
+            $('[id^=id.water_mobilehome]').parent().hide();
+        }
     }
+
+    function check_mobilehome() {
+        var water_mobilehome=$('#id_water_mobilehome').find(":selected").text();
+        if(water_mobilehome==='Yes'){
+            $('[id^=id_water_mobilehome_minor]').parent().show();
+            var water_mobilehome_minor=$('#id_water_mobilehome_minor]').find(":selected").text();
+            if(water_mobilehome_minor='Yes'){
+                $('[id^=id_water_mobilehome_major_plywood]').parent().show();
+                var water_mobilehome_major_plywood=$('[id^=id_water_mobilehome_major_plywood]').find(":selected").text();
+                if(water_mobilehome_major_plywood='Yes'){
+                    $('[id^=id_water_mobilehome_major_plywood_yes]').parent().show();
+                    var water_mobilehome_major_plywood_yes=$('[id^=id_water_mobilehome_major_plywood_yes]').find(":selected").text();
+                    if(water_mobilehome_major_plywood_yes='Yes'){
+                        $('[id^=id_water_mobilehome_destroyed]').parent().show();
+                        var water_mobilehome_destroyed=$('[id^=id_water_mobilehome_destroyed]').find(":selected").text();
+                    }
+                }else{
+                    $('[id^=id_water_mobilehome_major_nonplywood]').parent().show();
+                    var water_mobilehome_major_nonplywood=$('[id^=id_water_mobilehome_major_nonplywood]').find(":selected").text();
+                }
+            }
+        }else{
+            check_mobilehome();
+            $('[id^=id_water_mobilehome]').parent().hide();
+            $('[id^=id.water_conventionalhome_minor]').parent().show();
+            var water_conventionalhome_minor = $('[id^=id_water_conventionalhome_minor]').find(":selected").text();
+            if(water_conventionalhome_minor = 'Yes'){
+                $('[id^=id.water_conventionalhome_major]').parent().show();
+                var water_conventionalhome_major = $('[id^=id_water_conventionalhome_major]').find(":selected").text();
+                if(water_conventionalhome_major = 'Yes'){
+                    $('[id^=id.water_conventionalhome_destroyed]').parent().show();
+                    var water_conventionalhome_destroyed = $('[id^=id_water_conventionalhome_destroyed]').find(":selected").text();
+                }
+            }
+        }
+    }
+
     $( document ).ready(function() {
             check_mortgage()
             check_30_years()
             check_residence()
+            check_waterdamage()
+            check_mobilehome()
     });
      $('#id_type_of_occupancy').change(function () {
         var text=$( this ).find(":selected").text();
