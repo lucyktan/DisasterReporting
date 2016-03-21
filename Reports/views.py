@@ -96,7 +96,7 @@ def get_location(street_address,city,state,zipcode):
     lng=data['results'][0]['geometry']['location']['lng']
     return round(lat,10),round(lng,10)
 
-def show_results(request,lat,lng):
+def show_results(request,lat=None,lng=None):
     map_data=MapData()
     map_data.latitude=lat if lat is not None and lng is not None else 36.2062156
     map_data.longitude=lng if lat is not None and lng is not None else -113.750551
