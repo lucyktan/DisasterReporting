@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^login/$', login),    
     url(r'^logout/$', logout_view),
     url(r'^form/', views.get_form),
-    url(r'^results/', views.show_results),
+    url(r'^results/((?P<lat>-?\d+\.\d*)/(?P<lng>-?\d+\.\d*))?', views.show_results, name='results'),
     ]
 
 

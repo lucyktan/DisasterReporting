@@ -114,3 +114,13 @@ class Report(models.Model):
     manufactured_minor_1 = models.IntegerField()
     manufactured_minor_2 = models.IntegerField()
     manufactured_minor_3 = models.IntegerField()
+
+    latitude=models.DecimalField(max_digits=15,decimal_places=10)
+    longitude=models.DecimalField(max_digits=15,decimal_places=10)
+
+class MapData():
+    locations=[]
+    latitude=0
+    longitude=0
+    api_key=''
+    zoom=4
