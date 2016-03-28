@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 
 from Reports.models import Report
 from Reports.models import MapData
+from Reports.models import FormCategory
 from forms import DisasterForm
 from DisasterReporting.settings import GOOGLE_API_KEY as key
 import urllib2
@@ -76,16 +77,22 @@ manufactured_minor_3=form.cleaned_data['manufactured_minor_3'],
                   longitude=lng)
 
 def get_locations():
-    latlongs=Report.objects.values('latitude','longitude')
+    latlongs=Report.objects.values('id','latitude','longitude')
+    labels=[]
+    map_labels=[]
     lats=[]
     lngs=[]
     for latlong in latlongs:
+        id=latlong['id']
+        category=FormCategory.objects.get(pk=id).category_id
+        labels.append(category.label)
+        map_labels.append(category.map_label)
         lat=latlong['latitude']
         lng=latlong['longitude']
         lats.append(round(lat,3))
         lngs.append(round(lng,3))
 
-    return zip(lats,lngs)
+    return zip(lats,lngs,map_labels,labels)
 
 def get_location(street_address,city,state,zipcode):
     location=street_address+', '+city+', '+state+' '+str(zipcode)

@@ -7,14 +7,15 @@
     <script type="text/javascript">
     var map;
     // Adds a marker to the map.
-    function addMarker(latitude,longitude, map, label) {
+    function addMarker(latitude,longitude, map, label, title) {
         // Add the marker at the clicked location, and add the next-available label
         // from the array of alphabetical characters.
         var latlng = {lat: latitude, lng: longitude};
         var marker = new google.maps.Marker({
             position: latlng,
             label: label,
-            map: map
+            map: map,
+            title: title
         });
     }
     function initMap() {
@@ -24,8 +25,8 @@
             zoom: {{ map_data.zoom }},
             center: myLatLng
         });
-        {%  for lat,lng in map_data.locations %}
-            addMarker({{ lat }},{{ lng }},map,'A');
+        {%  for lat,lng,map_label,label in map_data.locations %}
+            addMarker({{ lat }},{{ lng }},map,'{{ map_label }}','{{ label }}');
         {% endfor %}
 
     }

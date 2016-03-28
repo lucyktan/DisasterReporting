@@ -11,6 +11,7 @@ from Reports.models import homevalue
 from Reports.models import disaster_history
 from Reports.models import owners
 from Reports.models import renters
+from Reports.models import Category
 
 def import_disaster_history():
     disaster_history.objects.all().delete()
@@ -100,7 +101,18 @@ def import_homevalue():
             home.rent = row[3]
             home.save()
 
+def import_categories():
+    Category.objects.all().delete()
+    csv_filepathname = os.getcwd()+'/categories.csv'
+    dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
+    for row in dataReader:
+        category = Category()
+        category.map_label = row[0]
+        category.label = row[1]
+        category.save()
+
 import_homevalue()
 import_disaster_history()
 import_owners()
 import_renters()
+import_categories()

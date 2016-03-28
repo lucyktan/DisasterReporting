@@ -124,3 +124,12 @@ class MapData():
     longitude=0
     api_key=''
     zoom=4
+
+class Category(models.Model):
+    map_label=models.CharField(max_length=1)
+    label=models.CharField(max_length=50)
+
+class FormCategory(models.Model):
+    form_id=models.OneToOneField(Report,on_delete=models.CASCADE,
+        primary_key=True)
+    category_id=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
