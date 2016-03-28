@@ -99,6 +99,49 @@ class DisasterForm(forms.Form):
     water_conventionalhome_major=forms.ChoiceField(required=False, label='Is water between 3 inches and 5 feet on your first floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     water_conventionalhome_destroyed=forms.ChoiceField(required=False, label='Is water greater than 5 feet on your first floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 
+    sewage = forms.ChoiceField(required=True, label='Is there more than 1 foot of sewage in your home?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    minor10_0 = forms.ChoiceField(required=False, label='Are there broken windows?', choices=((i,yes_no[i]) for i in range(len(yes_no))))     
+    minor10_1 = forms.ChoiceField(required=False, label='Is there damage to landscaping?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    minor10_2 = forms.ChoiceField(required=False, label='Is less than 50% of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major20_0 = forms.ChoiceField(required=False, label='If you have a chimney, is it still functional?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major20_1 = forms.ChoiceField(required=False, label='If you have a carpet on the first floor, is the majority of it soaked?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major20_2 = forms.ChoiceField(required=False, label='If you have a parking lot, is it damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major20_3 = forms.ChoiceField(required=False, label='Is more than 50% of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major30_0 = forms.ChoiceField(required=False, label='Is there damage from smoke?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major30_1 = forms.ChoiceField(required=False, label='Is the fire scape inoperable?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major30_2 = forms.ChoiceField(required=False, label='Are roof tiles missing?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major30_3 = forms.ChoiceField(required=False, label='Are your vehicles damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major40_0 = forms.ChoiceField(required=False, label='Is there minor damage to interior flooring?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major40_1 = forms.ChoiceField(required=False, label='Is there minor damage to exterior walling?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major40_2 = forms.ChoiceField(required=False, label='Are there trees fallen on your home?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major50_0 = forms.ChoiceField(required=False, label='Is there at least one room that is destroyed?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major50_1 = forms.ChoiceField(required=False, label='Are any exits blocked?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major50_2 = forms.ChoiceField(required=False, label='Are any utilities damaged? (furnace, water heater, well, septic system, etc)', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major60_0 = forms.ChoiceField(required=False, label='Is the foundation of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major60_1 = forms.ChoiceField(required=False, label='Is the insulation in your home damaged', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    major74_0 = forms.ChoiceField(required=False, label='Is the exterior frame of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major74_1 = forms.ChoiceField(required=False, label='Is the roof off or collapsed?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major74_2 = forms.ChoiceField(required=False, label='Are accessory outbuildings damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    destroyed80_0 = forms.ChoiceField(required=False, label='Is there flooding above the first floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed80_1 = forms.ChoiceField(required=False, label='Did your home move off its foundation?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed80_2 = forms.ChoiceField(required=False, label='Did any walls collapse?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed80_3 = forms.ChoiceField(required=False, label='Is the structure permanently uninhabitable?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed80_4 = forms.ChoiceField(required=False, label='Does your home require demolition because it is in danger due to landslides, mudslides, sinkholes, beach erosion, etc?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    destroyed90_0 = forms.ChoiceField(required=False, label='Did your home level above the foundation?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed90_1 = forms.ChoiceField(required=False, label='Is the second floor of your home completely gone?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
+    destroyed100_0 = forms.ChoiceField(required=False, label='Is your home leveled above the foundation, and is the basement and foundation damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    destroyed100_1 = forms.ChoiceField(required=False, label='Is there flooding above the eaves (edge of the roof)?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+
     # normal_water=forms.ChoiceField(required=False, label='Water level on the first floor (non-basement) is',choices=((x,x) for x in water_levels))
 
     # normal_destroyed_0=forms.ChoiceField(required=False, label='Structure is permanently uninhabitable',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
