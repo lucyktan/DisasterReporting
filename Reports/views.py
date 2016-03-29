@@ -34,7 +34,7 @@ date_of_disaster=form.cleaned_data['date_of_disaster'],
 insured=form.cleaned_data['insured'],
 mortgage=form.cleaned_data['mortgage'],
 owned_less_than_30_years=form.cleaned_data['owned_less_than_30_years'],
-predisaster_value=form.cleaned_data['predisaster_value'],
+predisaster_value=form.cleaned_data['predisaster_value'])
 
 # normal_water=form.cleaned_data['normal_water'],
 # normal_destroyed_0=form.cleaned_data['normal_destroyed_0'],
