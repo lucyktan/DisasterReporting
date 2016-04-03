@@ -111,7 +111,6 @@ class Report(models.Model):
     major20_0 = models.IntegerField(default=2)
     major20_1 = models.IntegerField(default=2)
     major20_2 = models.IntegerField(default=2)
-    major20_3 = models.IntegerField(default=2)
 
     major30_0 = models.IntegerField(default=2)
     major30_1 = models.IntegerField(default=2)
@@ -145,6 +144,9 @@ class Report(models.Model):
     destroyed100_0 = models.IntegerField(default=2)
     destroyed100_1 = models.IntegerField(default=2)
 
+    perDam= models.IntegerField(default=-1)
+    estimated_damage= models.IntegerField(default=-1)
+    fema_disaster_number = models.IntegerField(default=-1)
     # normal_water = models.CharField(max_length=50)
 
     # normal_destroyed_0 = models.IntegerField()

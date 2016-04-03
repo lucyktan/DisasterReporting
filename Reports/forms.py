@@ -110,7 +110,6 @@ class DisasterForm(forms.Form):
     major20_0 = forms.ChoiceField(required=False, label='If you have a chimney, is it still functional?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     major20_1 = forms.ChoiceField(required=False, label='If you have a carpet on the first floor, is the majority of it soaked?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     major20_2 = forms.ChoiceField(required=False, label='If you have a parking lot, is it damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
-    major20_3 = forms.ChoiceField(required=False, label='Is more than 50% of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 
     major30_0 = forms.ChoiceField(required=False, label='Is there damage from smoke?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     major30_1 = forms.ChoiceField(required=False, label='Is the fire escape inoperable?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
