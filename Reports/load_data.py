@@ -234,9 +234,9 @@ def import_report_renter():
             disaster.water_conventionalhome_destroyed = row[57]
             disaster.save()
 
-import_homevalue()
-import_disaster_history()
-import_owners()
-import_renters()
+#import_homevalue()
+#import_disaster_history()
+#import_owners()
+#import_renters()
 import_report_owner()
 import_report_renter()
