@@ -66,8 +66,8 @@ states = ['',
 types_of_residence=['','Single Family','Multi-Family','Manufactured Housing Unit']
 types_of_occupancy=['','Own as primary residence','Rent as primary residence','Non-primary residence']
 types_of_disaster=['','Flooding','Tornado','Hurricane/Tropical Storm','Earthquake']
-yes_no_unsure=['','Yes','No','Unsure']
-yes_no=['', 'Yes', 'No']
+yes_no_unsure=['No', 'Yes', 'Unsure', '']
+yes_no=['No', 'Yes', '']
 water_levels=['','Not present','Less than 3 inches','Between 3 inches and 18 inches','Above 18 inches']
 class DisasterForm(forms.Form):
     first_name=forms.CharField(label='First Name',max_length=100)
@@ -83,13 +83,15 @@ class DisasterForm(forms.Form):
     date_of_disaster=forms.DateField(label='Date of Disaster',initial=datetime.date.today,widget=forms.SelectDateWidget(years=(datetime.date.today().year-2,datetime.date.today().year-1,datetime.date.today().year)))
     insured=forms.ChoiceField(label='Residence is insured',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
     mortgage=forms.ChoiceField(required=False, label='Residence carries a mortgage',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
-    owned_less_than_30_years=forms.ChoiceField(required=False, label='Residence has been owned by you for less than 30 years',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
+    owned_less_than_30_years=forms.ChoiceField(required=False, label='Residence has been owned by you for less than 30 years',choices=((i,yes_no[i]) for i in range(len(yes_no))))
     predisaster_value=forms.DecimalField(label='Predisaster value of residence',decimal_places=2)
 
     water_damage=forms.ChoiceField(label='Is there water damage in your home?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 
     water_mobilehome=forms.ChoiceField(label='Do you have a mobile home?',choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    
     water_mobilehome_minor=forms.ChoiceField(required=False, label='Is water level less than 6 inches deep on the floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    
     water_mobilehome_major_plywood=forms.ChoiceField(required=False, label='Do you have plywood flooring in your mobile home?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     water_mobilehome_major_plywood_yes=forms.ChoiceField(required=False, label='Is water between 6 inches to 2 feet deep on the plywood floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     water_mobilehome_major_nonplywood=forms.ChoiceField(required=False, label='Is water between 1 inch to 2 feet deep on your nonplywood floor?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
@@ -111,7 +113,7 @@ class DisasterForm(forms.Form):
     major20_3 = forms.ChoiceField(required=False, label='Is more than 50% of your home damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 
     major30_0 = forms.ChoiceField(required=False, label='Is there damage from smoke?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
-    major30_1 = forms.ChoiceField(required=False, label='Is the fire scape inoperable?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
+    major30_1 = forms.ChoiceField(required=False, label='Is the fire escape inoperable?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     major30_2 = forms.ChoiceField(required=False, label='Are roof tiles missing?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
     major30_3 = forms.ChoiceField(required=False, label='Are your vehicles damaged?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+import datetime
 
 """Historical data from FEMA's PDA documents"""
 class disaster_history(models.Model):
@@ -71,20 +72,78 @@ class renters(models.Model):
 
 """Submitted information from the Report Damage form"""
 class Report(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    street_address = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=50)
-    zipcode = models.IntegerField()
-    type_of_residence = models.CharField(max_length=50)
-    type_of_occupancy = models.CharField(max_length=50)
-    type_of_disaster = models.CharField(max_length=50)
-    date_of_disaster = models.DateField(auto_now=False, auto_now_add=False)
-    insured = models.IntegerField()
-    mortgage = models.IntegerField()
-    owned_less_than_30_years=models.IntegerField()
-    predisaster_value = models.DecimalField(max_digits=50, decimal_places=2)
+    first_name = models.CharField(max_length=100, default='')
+    last_name = models.CharField(max_length=100, default='')
+    street_address = models.CharField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='')
+    state = models.CharField(max_length=50, default='')
+    zipcode = models.IntegerField(default=0)
+    type_of_residence = models.CharField(max_length=50, default='')
+    type_of_occupancy = models.CharField(max_length=50, default='')
+    type_of_disaster = models.CharField(max_length=50, default='')
+    date_of_disaster = models.DateField(auto_now=False, auto_now_add=False, default=datetime.date.today())
+    insured = models.IntegerField(default=3)
+    mortgage = models.IntegerField(default=3)
+    owned_less_than_30_years=models.IntegerField(default=2)
+    predisaster_value = models.DecimalField(max_digits=50, decimal_places=2, default=0)
+
+    water_damage = models.IntegerField(default=2)
+
+    water_mobilehome = models.IntegerField(default=2)
+
+    water_mobilehome_minor = models.IntegerField(default=2)
+
+    water_mobilehome_major_plywood = models.IntegerField(default=2)
+    water_mobilehome_major_plywood_yes = models.IntegerField(default=2)
+    water_mobilehome_major_nonplywood = models.IntegerField(default=2)
+    water_mobilehome_destroyed = models.IntegerField(default=2)
+
+    water_conventionalhome_minor = models.IntegerField(default=2)
+    water_conventionalhome_major = models.IntegerField(default=2)
+    water_conventionalhome_destroyed = models.IntegerField(default=2)
+
+    sewage = models.IntegerField(default=2)
+
+    minor10_0 = models.IntegerField(default=2)
+    minor10_1 = models.IntegerField(default=2)
+    minor10_2 = models.IntegerField(default=2)
+
+    major20_0 = models.IntegerField(default=2)
+    major20_1 = models.IntegerField(default=2)
+    major20_2 = models.IntegerField(default=2)
+    major20_3 = models.IntegerField(default=2)
+
+    major30_0 = models.IntegerField(default=2)
+    major30_1 = models.IntegerField(default=2)
+    major30_2 = models.IntegerField(default=2)
+    major30_3 = models.IntegerField(default=2)
+
+    major40_0 = models.IntegerField(default=2)
+    major40_1 = models.IntegerField(default=2)
+    major40_2 = models.IntegerField(default=2)
+
+    major50_0 = models.IntegerField(default=2)
+    major50_1 = models.IntegerField(default=2)
+    major50_2 = models.IntegerField(default=2)
+
+    major60_0 = models.IntegerField(default=2)
+    major60_1 = models.IntegerField(default=2)
+
+    major74_0 = models.IntegerField(default=2)
+    major74_1 = models.IntegerField(default=2)
+    major74_2 = models.IntegerField(default=2)
+
+    destroyed80_0 = models.IntegerField(default=2)
+    destroyed80_1 = models.IntegerField(default=2)
+    destroyed80_2 = models.IntegerField(default=2)
+    destroyed80_3 = models.IntegerField(default=2)
+    destroyed80_4 = models.IntegerField(default=2)
+
+    destroyed90_0 = models.IntegerField(default=2)
+    destroyed90_1 = models.IntegerField(default=2)
+
+    destroyed100_0 = models.IntegerField(default=2)
+    destroyed100_1 = models.IntegerField(default=2)
 
     # normal_water = models.CharField(max_length=50)
 

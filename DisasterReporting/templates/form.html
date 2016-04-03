@@ -9,7 +9,6 @@
     <input type="submit" value="Submit" />
 </form>
 <script type="text/javascript">
-
     function check_mortgage(){
         var text=$('#id_insured').find(":selected").text();
         var occupancy=$('#id_type_of_occupancy').find(":selected").text();
@@ -64,7 +63,12 @@
         $('[id^=id_destroyed]').parent().hide();
     }
 
+    $('[id^=id_]').change(function () {
+        check_waterdamage();
+    }
+
     function check_waterdamage() {
+        console.log("water");
         var water=$('#id_waterdamage').find(":selected").text();
         if(water==='Yes'){
             $('#id_water_mobilehome').parent().show();
@@ -80,7 +84,6 @@
         if(water_mobilehome==='Yes'){
             $('#id_water_mobilehome_minor').parent().show();
             var water_mobilehome_minor=$('#id_water_mobilehome_minor]').find(":selected").text();
-            }
         }else{
             show_form_minor10();
             $('#id_water_mobilehome').parent().hide();
@@ -222,6 +225,7 @@
     }
 
     $( document ).ready(function() {
+            console.log("ready");
             check_mortgage()
             check_30_years()
             hide_questions()
