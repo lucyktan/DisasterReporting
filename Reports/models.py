@@ -124,6 +124,8 @@ class MapData():
     longitude=0
     api_key=''
     zoom=4
+    zip_code_damages={'minor':[],'major':[],'destroyed':[]}
+    zip_code_num_reports={'few':[],'several':[],'many':[]}
 
 class Category(models.Model):
     map_label=models.CharField(max_length=1)

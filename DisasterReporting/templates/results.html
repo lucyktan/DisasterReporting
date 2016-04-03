@@ -2,10 +2,23 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-<div id="map">
-</div>
+<div id="map_damages"></div>
+<div id="map_num_reports"></div>
+    {% for type,zips in map_data.zip_code_damages.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+
+    {% endfor %}
+    {% for type,zips in map_data.zip_code_num_reports.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+
+    {% endfor %}
+
     <script type="text/javascript">
-    var map;
+    var map_nr;
     // Adds a marker to the map.
     function addMarker(latitude,longitude, map, label, title) {
         // Add the marker at the clicked location, and add the next-available label
@@ -20,15 +33,95 @@
     }
     function initMap() {
         var myLatLng = {lat: {{ map_data.latitude }}, lng: {{map_data.longitude }}};
-
-        map = new google.maps.Map(document.getElementById('map'), {
+        map_d = new google.maps.Map(document.getElementById('map_damages'), {
             zoom: {{ map_data.zoom }},
-            center: myLatLng
+            center: myLatLng,
+            streetViewControl: false
+        });
+        map_nr = new google.maps.Map(document.getElementById('map_num_reports'), {
+            zoom: {{ map_data.zoom }},
+            center: myLatLng,
+            streetViewControl: false
         });
         {%  for lat,lng,map_label,label in map_data.locations %}
-            addMarker({{ lat }},{{ lng }},map,'{{ map_label }}','{{ label }}');
+            addMarker({{ lat }},{{ lng }},map_d,'{{ map_label }}','{{ label }}');
+            addMarker({{ lat }},{{ lng }},map_nr,'{{ map_label }}','{{ label }}');
         {% endfor %}
-
+        var layer_d = new google.maps.FusionTablesLayer({
+            query: {
+                select: '\'geometry\'',
+                from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
+            }, styles: [{
+                polygonOptions: {
+                fillColor: '#0000FF',
+                fillOpacity: 0.01
+          }
+            },{
+              where: generateWhere('destroyed'),
+              polygonOptions: {
+                fillColor: '#FF0000',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('major'),
+              polygonOptions: {
+                fillColor: '#FFA500',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('minor'),
+              polygonOptions: {
+                fillColor: '#FFFF00',
+                fillOpacity: 0.5
+              }
+            }]
+        });
+        layer_d.setMap(map_d);
+        var layer_nr = new google.maps.FusionTablesLayer({
+            query: {
+                select: '\'geometry\'',
+                from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
+            }, styles: [{
+                polygonOptions: {
+                fillColor: '#0000FF',
+                fillOpacity: 0.01
+              }
+            },{
+              where: generateWhere('many'),
+              polygonOptions: {
+                fillColor: '#FF0000',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('several'),
+              polygonOptions: {
+                fillColor: '#FFA500',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('few'),
+              polygonOptions: {
+                fillColor: '#FFFF00',
+                fillOpacity: 0.5
+              }
+            }]
+        });
+        layer_nr.setMap(map_nr);
+    }
+    function generateWhere(type){
+        var filter = [];
+        $('.zip_'+type).each(function(index){
+            var zipcode=$(this).attr('id').replace('zip_','');
+            filter.push("'" + zipcode + "'");
+        });
+        var where = '';
+        if (filter.length) {
+          where = "'ZIP' IN (" + filter.join(',') + ')';
+        }
+        else{
+            where="ZIP = -9"
+        }
+        return where;
     }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ map_data.api_key }}&callback=initMap"

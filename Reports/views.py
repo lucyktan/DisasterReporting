@@ -103,11 +103,44 @@ def get_location(street_address,city,state,zipcode):
     lng=data['results'][0]['geometry']['location']['lng']
     return round(lat,10),round(lng,10)
 
+def get_zip_code_damages():
+    zip_codes={'minor':[],'major':[],'destroyed':[]}
+    minor=0
+    major=1
+    destroyed=7
+    zips = Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id GROUP BY zipcode')
+    for zip in zips:
+        if int(zip.damage)>=destroyed:
+             zip_codes['destroyed'].append(zip.zipcode)
+        elif int(zip.damage)>=major:
+             zip_codes['major'].append(zip.zipcode)
+        elif int(zip.damage)>=minor:
+             zip_codes['minor'].append(zip.zipcode)
+    return zip_codes
+
+def get_zip_code_num_reports():
+    zip_codes={'few':[],'several':[],'many':[]}
+    few=1
+    several=2
+    many=4
+    zips = Report.objects.raw('SELECT MIN(id) AS id,zipcode,COUNT(*) AS num_reports FROM disaster.reports_report GROUP BY zipcode')
+    for zip in zips:
+        if zip.num_reports>=many:
+             zip_codes['many'].append(zip.zipcode)
+        elif zip.num_reports>=several:
+             zip_codes['several'].append(zip.zipcode)
+        elif zip.num_reports>=few:
+             zip_codes['few'].append(zip.zipcode)
+    return zip_codes
+
+
 def show_results(request,lat=None,lng=None):
     map_data=MapData()
     map_data.latitude=lat if lat is not None and lng is not None else 36.2062156
     map_data.longitude=lng if lat is not None and lng is not None else -113.750551
     map_data.zoom=15 if lat is not None and lng is not None else 4
     map_data.locations=get_locations()
+    map_data.zip_code_damages=get_zip_code_damages()
+    map_data.zip_code_num_reports=get_zip_code_num_reports()
     map_data.api_key=key
     return render(request, 'results.html',{'map_data': map_data})
