@@ -1,8 +1,13 @@
 from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-
 from Accounts.models import Account
+
+"""
+Forms for account creation and login
+Modified from an opensourced project whiteboard on GitHub
+"""
+
 class CreateUserForm(forms.Form):
     email = forms.EmailField(label='Email',max_length=254)
     password = forms.CharField(label='Password',widget=forms.PasswordInput)

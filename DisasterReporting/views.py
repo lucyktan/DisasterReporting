@@ -3,8 +3,11 @@ from django.shortcuts import render_to_response, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-
 from DisasterReporting.forms import CreateUserForm, LoginForm
+
+"""
+Page routing and redirecting for the home page, account creation, login, and logout
+"""
 
 def home(request):
     return render(request, 'home.html')
