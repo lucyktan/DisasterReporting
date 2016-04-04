@@ -1,5 +1,4 @@
 *.pyc
 *.pyo
 *.idea/
-*.csv
 migrations/
