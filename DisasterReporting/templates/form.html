@@ -9,7 +9,6 @@
     <input type="submit" value="Submit" />
 </form>
 <script type="text/javascript">
-
     function check_mortgage(){
         var text=$('#id_insured').find(":selected").text();
         var occupancy=$('#id_type_of_occupancy').find(":selected").text();
@@ -41,23 +40,268 @@
             $('#id_owned_less_than_30_years').parent().show();
         }
     }
-    function check_residence(){
-        var text=$('#id_type_of_residence').find(":selected").text();
-         if(text==='Single Family'||text==='Multi-Family'){
-            $('[id^=id_manufactured]').parent().hide();
-            $('[id^=id_normal]').parent().show();
-         }else if(text==='Manufactured Housing Unit'){
-            $('[id^=id_manufactured]').parent().show();
-            $('[id^=id_normal]').parent().hide();
-         }else{
-            $('[id^=id_manufactured]').parent().hide();
-            $('[id^=id_normal]').parent().hide();
-         }
+
+    // function check_residence(){
+    //     var text=$('#id_type_of_residence').find(":selected").text();
+    //      if(text==='Single Family'||text==='Multi-Family'){
+    //         $('[id^=id_manufactured]').parent().hide();
+    //         $('[id^=id_normal]').parent().show();
+    //      }else if(text==='Manufactured Housing Unit'){
+    //         $('[id^=id_manufactured]').parent().show();
+    //         $('[id^=id_normal]').parent().hide();
+    //      }else{
+    //         $('[id^=id_manufactured]').parent().hide();
+    //         $('[id^=id_normal]').parent().hide();
+    //      }
+    // }
+
+    function hide_questions() {
+        $('[id^=id_water_mobilehome]').parent().hide();
+        $('[id^=id_water_conventionalhome]').parent().hide();
+        $('[id^=id_minor]').parent().hide();
+        $('[id^=id_major]').parent().hide();
+        $('[id^=id_destroyed]').parent().hide();
     }
+
+    $('[id^=id_]').change(function () {
+        check_waterdamage();
+        check_sewage();
+        check_minor();
+    }
+
+    function check_waterdamage() {
+        var water=$('#id_waterdamage').find(":selected").text();
+        if(water==='Yes'){
+            $('#id_water_mobilehome').parent().show();
+            show_form_minor10();
+        }else{
+            $('#id_water_mobilehome').parent().hide();
+        }
+    }
+
+    // function check_sewage() {
+    //     var sewage = $('#id_sewage').find(":selected").text();
+    //     if(sewage==='Yes')
+    // }
+
+    function check_minor() {
+        var major20_0 = $('#id_major20_0').find(":selected").text();
+        var major20_1 = $('#id_major20_1').find(":selected").text();
+        var major20_2 = $('#id_major20_2').find(":selected").text();
+        var major20_3 = $('#id_major20_3').find(":selected").text();
+
+        var major30_0 = $('#id_major30_0').find(":selected").text();
+        var major30_1 = $('#id_major30_1').find(":selected").text();
+        var major30_2 = $('#id_major30_2').find(":selected").text();
+        var major30_3 = $('#id_major30_3').find(":selected").text();
+
+        var major40_0 = $('#id_major40_0').find(":selected").text();
+        var major40_1 = $('#id_major40_1').find(":selected").text();
+        var major40_2 = $('#id_major40_2').find(":selected").text();
+        
+        var major50_0 = $('#id_major50_0').find(":selected").text();
+        var major50_1 = $('#id_major50_1').find(":selected").text();
+        var major50_2 = $('#id_major50_2').find(":selected").text();
+        
+        var major60_0 = $('#id_major60_0').find(":selected").text();
+        var major60_1 = $('#id_major60_1').find(":selected").text();
+        var major60_2 = $('#id_major60_2').find(":selected").text();
+        
+        var major74_0 = $('#id_major74_0').find(":selected").text();
+        var major74_1 = $('#id_major74_1').find(":selected").text();
+        var major74_2 = $('#id_major74_2').find(":selected").text();
+        
+        if(water_mobilehome_major_plywood_yes + water_mobilehome_major_nonplywood + water_conventionalhome_major + major20_0 + major20_1 + major20_2 + major20_3 + major30_0 + major30_1 + major30_2 + major30_3 + major40_0 + major40_1 + major40_2 + major50_0 + major50_1 + major50_2 + major60_0 + major60_1 + major60_2 + major74_0 + major74_1 + major74_2 >= 6) {
+            $('[id^=id_destroyed]').parent().show();
+        } else {
+            $('[id^=id_destroyed]').parent().hide();
+        }
+    }
+
+    function check_major() {
+
+    }
+
+    //checks the water level in either a mobile home or a conventional home
+    function show_form_minor10() {
+        var water_mobilehome=$('#id_water_mobilehome').find(":selected").text();
+        if(water_mobilehome==='Yes'){
+            $('#id_water_mobilehome_minor').parent().show();
+            var water_mobilehome_minor=$('#id_water_mobilehome_minor]').find(":selected").text();
+        }else{
+            show_form_minor10();
+            $('#id_water_mobilehome').parent().hide();
+            $('#id_water_conventionalhome_minor').parent().show();
+            var water_conventionalhome_minor = $('#id_water_conventionalhome_minor').find(":selected").text();
+        }
+        $('#id_sewage').parent().show();
+        $('[id^=id_minor10]').parent().show();
+        var sewage = $('#id_sewage').find(":selected").text();
+        var minor10_0 = $('#id_minor10_0').find(":selected").text();
+        var minor10_1 = $('#id_minor10_1').find(":selected").text();
+        var minor10_2 = $('#id_minor10_2').find(":selected").text();
+        if(water_mobilehome_minor==='Yes' || water_conventionalhome_minor==='Yes' || sewage==='Yes' || minor10_0==='Yes' || minor10_1==='Yes' || minor10_2==='Yes') {
+            show_form_major20();
+        }
+    }
+
+    function show_form_major20() {
+        if(('water_mobilehome_minor').is(":visible")){
+            var water_mobilehome_minor = $('#id_water_mobilehome_minor').find(":selected").text();
+            if(water_mobilehome_minor==='Yes'){
+                $('#id_water_mobilehome_major_plywood').parent().show();
+                var water_mobilehome_major_plywood = $('#id_water_mobilehome_major_plywood').find(":selected").text();
+                if(water_mobilehome_major_plywood==='Yes'){
+                    $('#id_water_mobilehome_major_plywood_yes').parent().show();
+                    var water_mobilehome_major_plywood_yes = $('#id_water_mobilehome_major_plywood_yes').find(":selected").text();
+                }else{
+                    $('#id_water_mobilehome_major_nonplywood').parent().show();
+                    var water_mobilehome_major_nonplywood = $('#id_water_mobilehome_major_nonplywood').find(":selected").text();
+                }
+            }
+        }
+        if(('water_conventionalhome_minor').is(":visible")){
+            var water_conventionalhome_minor = $('#id_water_conventionalhome_minor').find(":selected").text();
+            if(water_conventionalhome_minor==='Yes'){
+                $('#id_water_conventionalhome_major').parent().show();
+                var water_conventionalhome_major = $('#id_water_conventionalhome_major').find(":selected").text();
+            }
+        }
+        $('[id^=id_major]').parent().show();
+
+        var major20_0 = $('#id_major20_0').find(":selected").text();
+        var major20_1 = $('#id_major20_1').find(":selected").text();
+        var major20_2 = $('#id_major20_2').find(":selected").text();
+        var major20_3 = $('#id_major20_3').find(":selected").text();
+
+        var major30_0 = $('#id_major30_0').find(":selected").text();
+        var major30_1 = $('#id_major30_1').find(":selected").text();
+        var major30_2 = $('#id_major30_2').find(":selected").text();
+        var major30_3 = $('#id_major30_3').find(":selected").text();
+
+        var major40_0 = $('#id_major40_0').find(":selected").text();
+        var major40_1 = $('#id_major40_1').find(":selected").text();
+        var major40_2 = $('#id_major40_2').find(":selected").text();
+        
+        var major50_0 = $('#id_major50_0').find(":selected").text();
+        var major50_1 = $('#id_major50_1').find(":selected").text();
+        var major50_2 = $('#id_major50_2').find(":selected").text();
+        
+        var major60_0 = $('#id_major60_0').find(":selected").text();
+        var major60_1 = $('#id_major60_1').find(":selected").text();
+        var major60_2 = $('#id_major60_2').find(":selected").text();
+        
+        var major74_0 = $('#id_major74_0').find(":selected").text();
+        var major74_1 = $('#id_major74_1').find(":selected").text();
+        var major74_2 = $('#id_major74_2').find(":selected").text();
+        
+        if(water_mobilehome_major_plywood_yes + water_mobilehome_major_nonplywood + water_conventionalhome_major + major20_0 + major20_1 + major20_2 + major20_3 + major30_0 + major30_1 + major30_2 + major30_3 + major40_0 + major40_1 + major40_2 + major50_0 + major50_1 + major50_2 + major60_0 + major60_1 + major60_2 + major74_0 + major74_1 + major74_2 >= 6) {
+            show_form_destroyed80();
+        }
+    }
+
+    // function show_form_major30() {
+    //     $('[id^=id_major30]').parent().show();
+    //     var major30_0 = $('#id_major30_0').find(":selected").text();
+    //     var major30_1 = $('#id_major30_1').find(":selected").text();
+    //     var major30_2 = $('#id_major30_2').find(":selected").text();
+    //     var major30_3 = $('#id_major30_3').find(":selected").text();
+    //     if(major30_0==='Yes' || major30_1==='Yes' || major30_2==='Yes' || major30_3==='Yes') {
+    //         show_form_major40();
+    //     }
+    // }
+
+    // function show_form_major40() {
+    //     $('[id^=id_major40]').parent().show();
+    //     var major40_0 = $('#id_major40_0').find(":selected").text();
+    //     var major40_1 = $('#id_major40_1').find(":selected").text();
+    //     var major40_2 = $('#id_major40_2').find(":selected").text();
+    //     if(major40_0==='Yes' || major40_1==='Yes' || major40_2==='Yes') {
+    //         show_form_major50();
+    //     }
+    // }
+
+    // function show_form_major50() {
+    //     $('[id^=id_major50]').parent().show();
+    //     var major50_0 = $('#id_major50_0').find(":selected").text();
+    //     var major50_1 = $('#id_major50_1').find(":selected").text();
+    //     var major50_2 = $('#id_major50_2').find(":selected").text();
+    //     if(major50_0==='Yes' || major50_1==='Yes' || major50_2==='Yes') {
+    //         show_form_major60();
+    //     }
+    // }
+
+    // function show_form_major60() {
+    //     $('[id^=id_major60]').parent().show();
+    //     var major60_0 = $('#id_major60_0').find(":selected").text();
+    //     var major60_1 = $('#id_major60_1').find(":selected").text();
+    //     var major60_2 = $('#id_major60_2').find(":selected").text();
+    //     if(major60_0==='Yes' || major60_1==='Yes' || major60_2==='Yes') {
+    //         show_form_major74();
+    //     }
+    // }
+
+    // function show_form_major74() {
+    //     $('[id^=id_major70]').parent().show();
+    //     var major74_0 = $('#id_major74_0').find(":selected").text();
+    //     var major74_1 = $('#id_major74_1').find(":selected").text();
+    //     var major74_2 = $('#id_major74_2').find(":selected").text();
+    //     if(major74_0==='Yes' || major74_1==='Yes' || major74_2==='Yes') {
+    //         show_form_destroyed80();
+    //     }
+    // }
+
+    function show_form_destroyed80() {
+        if(('#id_water_mobilehome_major_plywood_yes').is(":visible") || ('#id_water_mobilehome_major_nonplywood').is(":visible")){
+            var water_mobilehome_major_plywood_yes = ('#id_water_mobilehome_major_plywood_yes').find(":selected").text();
+            var water_mobilehome_major_nonplywood = ('#id_water_mobilehome_major_nonplywood').find(":selected").text();
+            if(water_mobilehome_major_plywood_yes==='Yes' || water_mobilehome_major_nonplywood==='Yes'){
+                $('#id_water_mobilehome_destroyed').parent().show();
+            }
+        }
+        if(('#id_water_conventionalhome_major').is(":visible")){
+            var water_conventionalhome_major = ('#id_water_conventionalhome_major').find(":selected").text();
+            if(water_conventionalhome_major==='Yes'){
+                $('#id_water_conventionalhome_destroyed').parent().show();
+            }
+        }
+
+        $('[id^=id_destroyed]').parent().show();
+
+        var destroyed80_0 = $('#id_destroyed80_0').find(":selected").text();
+        var destroyed80_1 = $('#id_destroyed80_1').find(":selected").text();
+        var destroyed80_2 = $('#id_destroyed80_2').find(":selected").text();
+        var destroyed80_3 = $('#id_destroyed80_3').find(":selected").text();
+        var destroyed80_4 = $('#id_destroyed80_4').find(":selected").text();
+
+        var destroyed90_0 = $('#id_destroyed90_0').find(":selected").text();
+        var destroyed90_1 = $('#id_destroyed90_1').find(":selected").text();
+
+        var destroyed100_0 = $('#id_destroyed100_0').find(":selected").text();
+        var destroyed100_1 = $('#id_destroyed100_1').find(":selected").text(); 
+    }
+
+    // function show_form_destroyed90() {
+    //     $('[id^=id_destroyed90]').parent().show();
+    //     var destroyed90_0 = $('#id_destroyed90_0').find(":selected").text();
+    //     var destroyed90_1 = $('#id_destroyed90_1').find(":selected").text();
+    //     if(destroyed90_0==='Yes' || destroyed90_1==='Yes') {
+    //         show_form_destroyed100();
+    //     }  
+    // }
+
+    // function show_form_destroyed100() {
+    //     $('[id^=id_destroyed100]').parent().show();
+    //     var destroyed100_0 = $('#id_destroyed100_0').find(":selected").text();
+    //     var destroyed100_1 = $('#id_destroyed100_1').find(":selected").text(); 
+    // }
+
     $( document ).ready(function() {
+            console.log("ready");
             check_mortgage()
             check_30_years()
-            check_residence()
+            hide_questions()
+            check_waterdamage()
     });
      $('#id_type_of_occupancy').change(function () {
         var text=$( this ).find(":selected").text();
