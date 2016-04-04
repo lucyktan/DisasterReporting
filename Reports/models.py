@@ -144,7 +144,7 @@ class Report(models.Model):
     destroyed100_0 = models.IntegerField(default=2)
     destroyed100_1 = models.IntegerField(default=2)
 
-    perDam= models.DecimalField(decimal_places=4, default=-1.0000)
+    perDam= models.DecimalField(max_digits=6,decimal_places=4, default=-1.0000)
     estimated_damage= models.DecimalField(default=-1)
     fema_disaster_number = models.IntegerField(default=-1)
     # normal_water = models.CharField(max_length=50)
