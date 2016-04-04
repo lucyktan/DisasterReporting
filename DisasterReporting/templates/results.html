@@ -2,8 +2,8 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-<div id="map_damages"></div>
-<div id="map_num_reports"></div>
+<button id="toggle" type="button">Show map of report frequencies</button>
+<div id="map"></div>
     {% for type,zips in map_data.zip_code_damages.iteritems %}
         {% for zip in zips %}
             <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
@@ -18,7 +18,9 @@
     {% endfor %}
 
     <script type="text/javascript">
-    var map_nr;
+    var map;
+    var layer_d;
+    var layer_nr;
     // Adds a marker to the map.
     function addMarker(latitude,longitude, map, label, title) {
         // Add the marker at the clicked location, and add the next-available label
@@ -31,23 +33,36 @@
             title: title
         });
     }
+    $( document ).ready(function() {
+//      check_zoom();
+    });
+    function check_zoom() {
+        zoomLevel = map.getZoom();
+        console.log(zoomLevel);
+        if (zoomLevel >= 9) {
+            if($(this).text()=='Show map of damages'){
+                layer_d.setMap(null);
+                layer_nr.setMap(map);
+            }else{
+                layer_nr.setMap(null);
+                layer_d.setMap(map);
+            }
+        } else {
+            layer_d.setMap(null);
+            layer_nr.setMap(null);
+        }
+    }
     function initMap() {
         var myLatLng = {lat: {{ map_data.latitude }}, lng: {{map_data.longitude }}};
-        map_d = new google.maps.Map(document.getElementById('map_damages'), {
-            zoom: {{ map_data.zoom }},
-            center: myLatLng,
-            streetViewControl: false
-        });
-        map_nr = new google.maps.Map(document.getElementById('map_num_reports'), {
+        map = new google.maps.Map(document.getElementById('map'), {
             zoom: {{ map_data.zoom }},
             center: myLatLng,
             streetViewControl: false
         });
         {%  for lat,lng,map_label,label in map_data.locations %}
-            addMarker({{ lat }},{{ lng }},map_d,'{{ map_label }}','{{ label }}');
-            addMarker({{ lat }},{{ lng }},map_nr,'{{ map_label }}','{{ label }}');
+            addMarker({{ lat }},{{ lng }},map,'{{ map_label }}','{{ label }}');
         {% endfor %}
-        var layer_d = new google.maps.FusionTablesLayer({
+        layer_d = new google.maps.FusionTablesLayer({
             query: {
                 select: '\'geometry\'',
                 from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
@@ -76,8 +91,7 @@
               }
             }]
         });
-        layer_d.setMap(map_d);
-        var layer_nr = new google.maps.FusionTablesLayer({
+        layer_nr = new google.maps.FusionTablesLayer({
             query: {
                 select: '\'geometry\'',
                 from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
@@ -106,7 +120,9 @@
               }
             }]
         });
-        layer_nr.setMap(map_nr);
+        layer_nr.setMap(null);
+        check_zoom();
+        map.addListener('zoom_changed', function(){check_zoom();});
     }
     function generateWhere(type){
         var filter = [];
@@ -123,6 +139,17 @@
         }
         return where;
     }
+    $('#toggle').click(function(){
+        if($(this).text()=='Show map of report frequencies'){
+            layer_d.setMap(null);
+            layer_nr.setMap(map);
+            $(this).text('Show map of damages');
+        }else{
+            layer_nr.setMap(null);
+            layer_d.setMap(map);
+            $(this).text('Show map of report frequencies');
+        }
+    });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ map_data.api_key }}&callback=initMap"
     async defer></script>

@@ -138,7 +138,7 @@ def show_results(request,lat=None,lng=None):
     map_data=MapData()
     map_data.latitude=lat if lat is not None and lng is not None else 36.2062156
     map_data.longitude=lng if lat is not None and lng is not None else -113.750551
-    map_data.zoom=15 if lat is not None and lng is not None else 4
+    map_data.zoom=11 if lat is not None and lng is not None else 4
     map_data.locations=get_locations()
     map_data.zip_code_damages=get_zip_code_damages()
     map_data.zip_code_num_reports=get_zip_code_num_reports()
