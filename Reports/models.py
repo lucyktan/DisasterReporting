@@ -82,8 +82,8 @@ class Report(models.Model):
     type_of_occupancy = models.CharField(max_length=50, default='')
     type_of_disaster = models.CharField(max_length=50, default='')
     date_of_disaster = models.DateField(auto_now=False, auto_now_add=False, default=datetime.date.today())
-    insured = models.IntegerField(default=3)
-    mortgage = models.IntegerField(default=3)
+    insured = models.IntegerField(default=2)
+    mortgage = models.IntegerField(default=2)
     owned_less_than_30_years=models.IntegerField(default=2)
     predisaster_value = models.DecimalField(max_digits=50, decimal_places=2, default=0)
 
@@ -107,6 +107,10 @@ class Report(models.Model):
     minor10_0 = models.IntegerField(default=2)
     minor10_1 = models.IntegerField(default=2)
     minor10_2 = models.IntegerField(default=2)
+
+    major20_0 = models.IntegerField(default=2)
+    major20_1 = models.IntegerField(default=2)
+    major20_2 = models.IntegerField(default=2)
 
     major20_0 = models.IntegerField(default=2)
     major20_1 = models.IntegerField(default=2)
@@ -145,7 +149,7 @@ class Report(models.Model):
     destroyed100_1 = models.IntegerField(default=2)
 
     perDam= models.DecimalField(max_digits=20,decimal_places=4, default=-1.0000)
-    estimated_damage= models.DecimalField(max_digits=20,decimal_places=4, default=-1.0000)
+    estimated_damage= models.DecimalField(max_digits=20,decimal_places=2, default=-1.00)
     fema_disaster_number = models.IntegerField(default=-1)
     # normal_water = models.CharField(max_length=50)
 
