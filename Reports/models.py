@@ -112,10 +112,6 @@ class Report(models.Model):
     major20_1 = models.IntegerField(default=2)
     major20_2 = models.IntegerField(default=2)
 
-    major20_0 = models.IntegerField(default=2)
-    major20_1 = models.IntegerField(default=2)
-    major20_2 = models.IntegerField(default=2)
-
     major30_0 = models.IntegerField(default=2)
     major30_1 = models.IntegerField(default=2)
     major30_2 = models.IntegerField(default=2)
