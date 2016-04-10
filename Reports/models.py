@@ -148,3 +148,7 @@ class Report(models.Model):
     perDam= models.DecimalField(max_digits=20,decimal_places=4, default=-1.0000)
     estimated_damage= models.DecimalField(max_digits=20,decimal_places=2, default=-1.00)
     fema_disaster_number = models.IntegerField(default=-1)
+
+class individual_estimate_model_coefficients(models.Model):
+    variable=models.CharField(max_length=50)
+    coefficient=models.DecimalField(max_digits=20,decimal_places=8)
