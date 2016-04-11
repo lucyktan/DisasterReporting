@@ -1,3 +1,157 @@
-<p>
-    You completed the form.
-</p>
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+{% block body %}
+<button id="toggle" type="button">Show map of report frequencies</button>
+<div id="map"></div>
+    {% for type,zips in map_data.zip_code_damages.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+
+    {% endfor %}
+    {% for type,zips in map_data.zip_code_num_reports.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+
+    {% endfor %}
+
+    <script type="text/javascript">
+    var map;
+    var layer_d;
+    var layer_nr;
+    // Adds a marker to the map.
+    function addMarker(latitude,longitude, map, label, title) {
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        var latlng = {lat: latitude, lng: longitude};
+        var marker = new google.maps.Marker({
+            position: latlng,
+            label: label,
+            map: map,
+            title: title
+        });
+    }
+    $( document ).ready(function() {
+//      check_zoom();
+    });
+    function check_zoom() {
+        zoomLevel = map.getZoom();
+        console.log(zoomLevel);
+        if (zoomLevel >= 9) {
+            if($(this).text()=='Show map of damages'){
+                layer_d.setMap(null);
+                layer_nr.setMap(map);
+            }else{
+                layer_nr.setMap(null);
+                layer_d.setMap(map);
+            }
+        } else {
+            layer_d.setMap(null);
+            layer_nr.setMap(null);
+        }
+    }
+    function initMap() {
+        var myLatLng = {lat: {{ map_data.latitude }}, lng: {{map_data.longitude }}};
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: {{ map_data.zoom }},
+            center: myLatLng,
+            streetViewControl: false
+        });
+        {%  for lat,lng,map_label,label in map_data.locations %}
+            addMarker({{ lat }},{{ lng }},map,'{{ map_label }}','{{ label }}');
+        {% endfor %}
+        layer_d = new google.maps.FusionTablesLayer({
+            query: {
+                select: '\'geometry\'',
+                from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
+            }, styles: [{
+                polygonOptions: {
+                fillColor: '#0000FF',
+                fillOpacity: 0.01
+          }
+            },{
+              where: generateWhere('destroyed'),
+              polygonOptions: {
+                fillColor: '#FF0000',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('major'),
+              polygonOptions: {
+                fillColor: '#FFA500',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('minor'),
+              polygonOptions: {
+                fillColor: '#FFFF00',
+                fillOpacity: 0.5
+              }
+            }]
+        });
+        layer_nr = new google.maps.FusionTablesLayer({
+            query: {
+                select: '\'geometry\'',
+                from: '1K15dncTve6k-fvFrj-opL7DDmkkDVJdumiGqq_uZ'
+            }, styles: [{
+                polygonOptions: {
+                fillColor: '#0000FF',
+                fillOpacity: 0.01
+              }
+            },{
+              where: generateWhere('many'),
+              polygonOptions: {
+                fillColor: '#FF0000',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('several'),
+              polygonOptions: {
+                fillColor: '#FFA500',
+                fillOpacity: 0.5
+              }
+            },{
+              where: generateWhere('few'),
+              polygonOptions: {
+                fillColor: '#FFFF00',
+                fillOpacity: 0.5
+              }
+            }]
+        });
+        layer_nr.setMap(null);
+        check_zoom();
+        map.addListener('zoom_changed', function(){check_zoom();});
+    }
+    function generateWhere(type){
+        var filter = [];
+        $('.zip_'+type).each(function(index){
+            var zipcode=$(this).attr('id').replace('zip_','');
+            filter.push("'" + zipcode + "'");
+        });
+        var where = '';
+        if (filter.length) {
+          where = "'ZIP' IN (" + filter.join(',') + ')';
+        }
+        else{
+            where="ZIP = -9"
+        }
+        return where;
+    }
+    $('#toggle').click(function(){
+        if($(this).text()=='Show map of report frequencies'){
+            layer_d.setMap(null);
+            layer_nr.setMap(map);
+            $(this).text('Show map of damages');
+        }else{
+            layer_nr.setMap(null);
+            layer_d.setMap(map);
+            $(this).text('Show map of report frequencies');
+        }
+    });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ map_data.api_key }}&callback=initMap"
+    async defer></script>
+{% endblock %}
+</html>
