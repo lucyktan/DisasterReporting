@@ -5,9 +5,101 @@
 <div id="content1">
 <form action="/form/" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <!-- {{ form.as_p }} -->
+    {{ form.non_field_errors }}
+    <h2>Personal Information</h2>
+        <table id="personalinfo", style="width: 90%">
+            <tr>
+                <td>First name:</td>    
+                <td>{{ form.first_name }}</td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td>{{ form.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Street address:</td>
+                <td>{{ form.street_address }}</td>
+            </tr>
+            <tr>
+                <td>Address line 2:</td>
+                <td>{{ form.address_line_2 }}</td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td>{{ form.city }}</td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td>{{ form.state }}</td>
+            </tr>
+            <tr>
+                <td>Zip code:</td>
+                <td>{{ form.zipcode }}</td>
+            </tr>
+        </table>
+    <h2>Property Information</h2>
+        <table id="propertyinfo", style="width: 80%">
+            <tr><td>Type of Residence:</td></tr>
+            <tr><td>{{ form.type_of_residence }}</td></tr>
+            <tr><td>Type of Occupancy:</td></tr>
+            <tr><td>{{ form.type_of_occupancy }}</td></tr>
+            <tr>
+                <td>Is your residence insured?</td>
+                <td>{{ form.insured }}</td>
+            </tr>
+            <tr>
+                <td>What was the market value of your property before the disaster? Enter 0 if you do not know.</td>
+                <td>{{ form.predisaster_value }}</td>
+            <tr>
+        </table>
+        <table>
+            <td><h5>Check the box if the statement is true:</h5></td>
+            <tr>
+                <td>Does your residence carry a mortgage?</td>
+                <td>{{ form.mortgage }}</td>
+            </tr>
+            <tr>
+                <td>Has the residence been owned by you for less than 30 years?</td>
+                <td>{{ form.owned_less_than_30_years }}</td>
+            </tr>
+            
+        </table>
+    <h2>Disaster Damage Information</h2>
+        <table id="damageinfo", style="width: 90%">
+            <tr><td>Type of Disaster:</td></tr>
+            <tr><td>{{ form.type_of_disaster }}</td></tr>
+            <tr>
+                <td>Approximate date of the disaster:</td>
+                <td>{{ form.date_of_disaster }}</td>
+            </tr>
+        </table>
+    <input type="submit" value="Submit">
 </form>
+
+<style>
+#content1{
+    margin: 6% auto auto 30%;
+    width: 50%;
+}
+
+#personalinfo{
+}
+
+ul{
+    list-style: none;
+    font-style: normal;
+}
+
+.radio{
+    display: inline-block;
+}
+
+table, th, tr, td{
+    border: 20px solid white;
+}
+</style>
+
 <script type="text/javascript">
     function check_mortgage(){
         var text=$('#id_insured').find(":selected").text();
@@ -323,11 +415,5 @@
     })
 </script>
 </div>
-<style>
-#content1{
-    margin: 6% auto auto auto;
-    width: 40%;
-}
-</style>
 {% endblock %}
 </html>

@@ -8,7 +8,6 @@ from forms import DisasterForm
 def get_form(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
-        
     if request.method == 'POST':
         form = DisasterForm(request.POST)
         if form.is_valid():
@@ -60,7 +59,6 @@ minor10_2 = form.cleaned_data['minor10_2'],
 major20_0 = form.cleaned_data['major20_0'],
 major20_1 = form.cleaned_data['major20_1'],
 major20_2 = form.cleaned_data['major20_2'],
-major20_3 = form.cleaned_data['major20_3'],
 
 major30_0 = form.cleaned_data['major30_0'],
 major30_1 = form.cleaned_data['major30_1'],
@@ -91,7 +89,7 @@ destroyed80_4 = form.cleaned_data['destroyed80_4'],
 destroyed90_0 = form.cleaned_data['destroyed90_0'],
 destroyed90_1 = form.cleaned_data['destroyed90_1'],
 
-destroyed90_2 = form.cleaned_data['destroyed90_0'],
+destroyed100_0 = form.cleaned_data['destroyed100_0'],
 destroyed100_1 = form.cleaned_data['destroyed100_1'])
 
 # normal_water=form.cleaned_data['normal_water'],
