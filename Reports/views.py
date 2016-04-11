@@ -1,7 +1,11 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from Reports.models import Report
+from Reports.models import individual_estimate_model_coefficients
 from forms import DisasterForm
+import math
+import decimal
 
 """Renders the Report Damage form depending on whether the user is logged in"""
 
@@ -13,12 +17,167 @@ def get_form(request):
         form = DisasterForm(request.POST)
         if form.is_valid():
             report=make_report(form)
+            percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
+            report.estimated_damage = estimated_damage
+            report.perDam = percent_damage
             report.save()
-            return HttpResponseRedirect('/results/')
+            return redirect('results','{0:.2f}'.format(estimated_damage))
     else:
         form = DisasterForm()
 
     return render(request, 'form.html', {'form': form})
+
+def calculate_individual_damage_estimate(report):
+    coefficients=individual_estimate_model_coefficients.objects.all()
+    cur_sum=decimal.Decimal(0.0)
+    has_damage=False
+    for coefficient in coefficients:
+        if should_add_coefficient(coefficient.variable,'owned',report,'type_of_occupancy','Own as primary residence'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'multifamily',report,'type_of_residence','Multi-Family'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'singlefamily',report,'type_of_residence','Single Family'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'earthquake',report,'type_of_disaster','Earthquake'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'fire',report,'type_of_disaster','Fire'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'flood',report,'type_of_disaster','Flooding'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'hurricane',report,'type_of_disaster','Hurricane/Tropical storm'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'mudslide',report,'type_of_disaster','Mud/Landslide'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'other',report,'type_of_disaster','Other'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'tornado',report,'type_of_disaster','Tornado'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'typhoon',report,'type_of_disaster','Typhoon'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'sewage_1',report,'sewage',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'minor10_1_1',report,'minor10_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'minor10_2_1',report,'minor10_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_0_1',report,'major20_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_1_1',report,'major20_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_2_1',report,'major20_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_0_1',report,'major30_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_1_1',report,'major30_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_2_1',report,'major30_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_3_1',report,'major30_3',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_0_1',report,'major40_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_1_1',report,'major40_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_2_1',report,'major40_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_0_1',report,'major50_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_1_1',report,'major50_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_2_1',report,'major50_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major60_0_1',report,'major60_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major60_1_1',report,'major60_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_0_1',report,'major74_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_1_1',report,'major74_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_2_1',report,'major74_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_0_1',report,'destroyed80_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_1_1',report,'destroyed80_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_2_1',report,'destroyed80_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_3_1',report,'destroyed80_3',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_4_1',report,'destroyed80_4',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed90_0_1',report,'destroyed90_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed90_1_1',report,'destroyed90_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed100_0_1',report,'destroyed100_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed100_1_1',report,'destroyed100_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_damage_1',report,'water_damage',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_1',report,'water_mobilehome',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_plywood_1',report,'water_mobilehome_major_plywood',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_nonplyw_1',report,'water_mobilehome_major_nonplywood',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_destroyed_1',report,'water_mobilehome_destroyed',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_major_1',report,'water_conventionalhome_major',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_destroy_1',report,'water_conventionalhome_destroyed',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif coefficient.variable == 'predisaster_value':
+            cur_sum+=coefficient.coefficient * report.predisaster_value
+        elif coefficient.variable == 'Constant':
+            cur_sum+=coefficient.coefficient
+
+    percent_damage = math.exp(cur_sum)/(1+math.exp(cur_sum)) if has_damage else 0
+    estimated_damage = decimal.Decimal(percent_damage) * report.predisaster_value
+    if estimated_damage > 31900: #max FEMA grant amount
+        estimated_damage = 31900
+    return percent_damage,estimated_damage
+
+def should_add_coefficient(variable,var_name,report,report_var_name,report_var_value):
+    return variable=='var_name' and report.get_attr(report_var_name) == report_var_value
 
 def make_report(form):
     return Report(first_name=form.cleaned_data['first_name'],
@@ -120,4 +279,5 @@ destroyed100_1 = form.cleaned_data['destroyed100_1'])
 # manufactured_minor_3=form.cleaned_data['manufactured_minor_3'])
 
 def show_results(request):
-    return render(request, 'results.html')
+    estimate=decimal.Decimal(request.GET.get('estimate'))
+    return render(request, 'results.html',{'estimate':estimate})
