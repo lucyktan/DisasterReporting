@@ -190,7 +190,7 @@ def make_report(form):
    if not num.exists():
         number = Report.objects.raw('SELECT id, max(fema_disaster_number) FROM disaster.reports_report')[0].fema_disaster_number + 1
    else:
-        number = num.raw('SELECT fema_disaster_number, re FROM disaster.reports_report')[0].fema_disaster_number
+        number = num.raw('SELECT fema_disaster_number, id FROM disaster.reports_report')[0].fema_disaster_number
 
    return Report(first_name=form.cleaned_data['first_name'],
 last_name=form.cleaned_data['last_name'],
@@ -266,6 +266,5 @@ destroyed100_1 = form.cleaned_data['destroyed100_1'],
 fema_disaster_number=number)
 
 
-def show_results(request):
-    estimate=decimal.Decimal(request.GET.get('estimate'))
+def show_results(request,estimate=0.0):
     return render(request, 'results.html',{'estimate':estimate})
