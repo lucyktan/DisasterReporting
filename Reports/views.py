@@ -20,18 +20,29 @@ def get_form(request):
         form = DisasterForm(request.POST)
         if form.is_valid():
             report=make_report(form)
-            percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
-            report.estimated_damage = estimated_damage
-            report.perDam = percent_damage
-            report.fema_disaster_number = disaster_number(report)
-            report.predisaster_value = estimate_home_value(report)
-            total_estimate = total_disaster_estimate(report)
-            report.save()
-            return redirect('results','{0:.2f}'.format(estimated_damage), total_estimate)
+            if unique_address(report) == 1:
+                percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
+                report.estimated_damage = estimated_damage
+                report.perDam = percent_damage
+                report.fema_disaster_number = disaster_number(report)
+                report.predisaster_value = estimate_home_value(report)
+                total_estimate = total_disaster_estimate(report)
+                report.save()
+                return redirect('results','{0:.2f}'.format(estimated_damage), total_estimate)
     else:
         form = DisasterForm()
 
     return render(request, 'form.html', {'form': form})
+
+def unique_address(report):
+    inpDate = report.date_of_disaster
+    start = inpDate + datetime.timedelta(days=-7)
+    end = inpDate + datetime.timedelta(days= 7)
+    add = Report.objects.filter(date_of_disaster__range = (start,end), street_address = report.street_address)
+    if add.exists():
+        return 0
+    else:
+        return 1
 
 def estimate_home_value(report):
     if report.predisaster_value == 0:
