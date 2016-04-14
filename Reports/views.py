@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from Reports.models import Report
+from Reports.models import homevalue
 from Reports.models import individual_estimate_model_coefficients
 from forms import DisasterForm
 import math
@@ -23,6 +24,7 @@ def get_form(request):
             report.estimated_damage = estimated_damage
             report.perDam = percent_damage
             report.fema_disaster_number = disaster_number(report)
+            report.predisaster_value = estimate_home_value(report)
             total_estimate = total_disaster_estimate(report)
             report.save()
             return redirect('results','{0:.2f}'.format(estimated_damage), total_estimate)
@@ -30,6 +32,16 @@ def get_form(request):
         form = DisasterForm()
 
     return render(request, 'form.html', {'form': form})
+
+def estimate_home_value(report):
+    if report.predisaster_value == 0:
+        if homevalue.objects.raw('SELECT id, count(zipcode) as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c >0:
+            return homevalue.objects.raw('SELECT id, medhome as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c
+        else:
+            ##median home value in US
+            return 188900.0
+    else:
+       return decimal.Decimal(report.predisaster_value)
 
 def calculate_individual_damage_estimate(report):
     coefficients=individual_estimate_model_coefficients.objects.all()
@@ -258,7 +270,6 @@ date_of_disaster=form.cleaned_data['date_of_disaster'],
 insured=form.cleaned_data['insured'],
 mortgage=form.cleaned_data['mortgage'],
 owned_less_than_30_years=form.cleaned_data['owned_less_than_30_years'],
-predisaster_value=form.cleaned_data['predisaster_value'], 
 
 water_damage = form.cleaned_data['water_damage'],
 
@@ -274,6 +285,7 @@ water_mobilehome_destroyed = form.cleaned_data['water_mobilehome_destroyed'],
 water_conventionalhome_minor = form.cleaned_data['water_conventionalhome_minor'],
 water_conventionalhome_major = form.cleaned_data['water_conventionalhome_major'],
 water_conventionalhome_destroyed = form.cleaned_data['water_conventionalhome_destroyed'],
+predisaster_value=form.cleaned_data['predisaster_value'],
 
 sewage = form.cleaned_data['sewage'],
 
