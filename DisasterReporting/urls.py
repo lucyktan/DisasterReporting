@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^login/$', login),    
     url(r'^logout/$', logout_view),
     url(r'^form/', views.get_form),
-    url(r'^results/(?P<estimate>\d+\.?\d*)', views.show_results,name='results'),
+    url(r'^results/(?P<estimate>\d+\.?\d*)/(?P<total>.+)', views.show_results,name='results'),
     ]
 
 

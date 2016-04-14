@@ -7,6 +7,7 @@ from forms import DisasterForm
 import math
 import decimal
 import datetime
+import random
 
 """Renders the Report Damage form depending on whether the user is logged in"""
 
@@ -21,8 +22,10 @@ def get_form(request):
             percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
             report.estimated_damage = estimated_damage
             report.perDam = percent_damage
+            report.fema_disaster_number = disaster_number(report)
+            total_estimate = total_disaster_estimate(report)
             report.save()
-            return redirect('results','{0:.2f}'.format(estimated_damage))
+            return redirect('results','{0:.2f}'.format(estimated_damage), total_estimate)
     else:
         form = DisasterForm()
 
@@ -180,18 +183,68 @@ def calculate_individual_damage_estimate(report):
 def should_add_coefficient(variable,var_name,report,report_var_name,report_var_value):
     return variable=='var_name' and report.get_attr(report_var_name) == report_var_value
 
-def make_report(form):
-   inpState = form.cleaned_data['state']
-   inpDisType  = form.cleaned_data['type_of_disaster']
-   inpDate = form.cleaned_data['date_of_disaster']
+#calculates total disaster cost
+def total_disaster_estimate(report):
+    if report.type_of_disaster == 'Hurricane/Tropical Storm':
+        num = int(disaster_number(report))
+        totalEntered = Report.objects.raw('SELECT id, count(*) as c FROM disaster.reports_report WHERE fema_disaster_number = %s',[num])[0].c
+        uniqueZip = Report.objects.raw('SELECT id, count(DISTINCT zipcode) as c FROM disaster.reports_report WHERE fema_disaster_number = %s',[num])[0].c
+        ####   probability of a new point being in a unique zipcode (based on historical data)
+        big = ((1-.01011463)**(uniqueZip-1))*((.01011463)**(totalEntered-uniqueZip-2))
+        med = ((1-.08623204)**(uniqueZip-1))*((.08623204)**(totalEntered-uniqueZip-2))
+        small = ((1-.06405369)**(uniqueZip-1))*((.06405369)**(totalEntered-uniqueZip-2))
+        probBig = big/(big + med + small)
+        probMed = med/(big + med +small)
+
+        rand = random.uniform(0,1)
+        if rand <= probBig:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*30000
+            estu = 5425.08*60000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+        elif rand > probBig & rand <= probBig + probMed:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*10000
+            estu = 5425.08*30000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+        else:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*100
+            estu = 5425.08*10000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+    elif report.type_of_disaster == "Tornado":
+        ## based on  damage estimate for tornados
+        estl = 4410.958*380
+        estu = 4410.958*1500
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+    elif report.type_of_disaster == 'Earthquake':
+        ## based on  damage estimate for earthquakes
+        estl = 3305.191*3000
+        estu = 3305.191*6000
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+    else:
+        ## based on  damage estimate for floods
+        estl = 3564.974*100
+        estu = 3564.974*6000
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+#sets disaster number
+def disaster_number(report):
+   inpState = report.state
+   inpDisType  = report.type_of_disaster
+   inpDate = report.date_of_disaster
    start = inpDate + datetime.timedelta(days=-4)
    end = inpDate + datetime.timedelta(days= 4)
-   num = Report.objects.filter(date_of_disaster__range = (start,end), state=inpState, type_of_disaster=inpDisType)
+   num = Report.objects.filter(date_of_disaster__range = (start,end), state = inpState, type_of_disaster = inpDisType)
    if not num.exists():
-        number = Report.objects.raw('SELECT id, max(fema_disaster_number) FROM disaster.reports_report')[0].fema_disaster_number + 1
+        return Report.objects.raw('SELECT id, max(fema_disaster_number) as a FROM disaster.reports_report')[0].a + 1
    else:
-        number = num.raw('SELECT fema_disaster_number, id FROM disaster.reports_report')[0].fema_disaster_number
+        return Report.objects.filter(date_of_disaster__range = (start,end), state = inpState, type_of_disaster = inpDisType)[0].fema_disaster_number
 
+
+def make_report(form):
    return Report(first_name=form.cleaned_data['first_name'],
 last_name=form.cleaned_data['last_name'],
 street_address=form.cleaned_data['street_address'],
@@ -262,9 +315,8 @@ destroyed90_0 = form.cleaned_data['destroyed90_0'],
 destroyed90_1 = form.cleaned_data['destroyed90_1'],
 
 destroyed100_0 = form.cleaned_data['destroyed100_0'],
-destroyed100_1 = form.cleaned_data['destroyed100_1'],
-fema_disaster_number=number)
+destroyed100_1 = form.cleaned_data['destroyed100_1'],)
 
 
-def show_results(request,estimate=0.0):
-    return render(request, 'results.html',{'estimate':estimate})
+def show_results(request,estimate=0.0, total = ''):
+    return render(request, 'results.html',{'estimate':estimate, 'total':total})
