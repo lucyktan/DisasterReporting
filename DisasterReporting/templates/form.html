@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 {% block body %}
 <div id="content1">
-<form action="/form/" method="post">
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />

@@ -72,9 +72,11 @@ class renters(models.Model):
 
 """Submitted information from the Report Damage form"""
 class Report(models.Model):
+    username = models.CharField(max_length=100,default='')
     first_name = models.CharField(max_length=100, default='')
     last_name = models.CharField(max_length=100, default='')
     street_address = models.CharField(max_length=100, default='')
+    address_line_2=models.CharField(max_length=100, default='')
     city = models.CharField(max_length=100, default='')
     state = models.CharField(max_length=50, default='')
     zipcode = models.IntegerField(default=0)

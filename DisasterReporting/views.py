@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from DisasterReporting.forms import CreateUserForm, LoginForm
+from Reports.models import Report
 
 """
 Page routing and redirecting for the home page, account creation, login, and logout
@@ -35,3 +36,9 @@ def login(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/home/')
+
+def formhistory(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/login/')
+    reports = Report.objects.filter(username=request.user.username)
+    return render(request,'Accounts/formhistory.html',{'reports':reports})

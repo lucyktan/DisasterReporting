@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+
+{% block body %}
+
+<div id="content1">
+<table>
+    <thead>
+    <tr>
+        <th>Date of disaster</th>
+        <th>Type of disaster</th>
+        <th>Address</th>
+        <th>Estimated damage</th>
+        <th>Edit link</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for report in reports %}
+        <tr>
+            <td>
+                {{ report.date_of_disaster }}
+            </td>
+            <td>
+                {{ report.type_of_disaster }}
+            </td>
+            <td>
+                {{ report.street_address }}<br>
+                {% ifnotequal report.address_line_2 "" %}
+                    {{ report.address_line_2 }}<br>
+                {% endifnotequal %}
+                {{ report.city }}, {{ report.state }} {{ report.zipcode }}
+            </td>
+            <td>
+                {% if report.estimated_damage < 0 %}
+                    NA
+                {% else %}
+                    ${{ report.estimated_damage }}
+                {% endif %}
+
+            </td>
+            <td>
+                <a href="/form/{{ report.id }}">Link</a>
+            </td>
+        </tr>
+	{% endfor %}
+    </tbody>
+</table>
+	
+
+</div>
+
+<style>
+
+#content1{
+	margin: 6% auto auto auto;
+
+}
+
+</style>
+
+{% endblock %}
+
