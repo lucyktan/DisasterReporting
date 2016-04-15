@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from Reports.models import Report
 from Reports.models import MapData
 from Reports.models import FormCategory
+from Reports.models import Category
 from forms import DisasterForm
 from DisasterReporting.settings import GOOGLE_API_KEY as key
 import urllib2
@@ -24,13 +25,44 @@ def get_form(request):
             except:
                 return render(request, 'form.html', {'form': form,'address_invalid':True})
             report.save()
-            lat=report.latitude
-            lng=report.longitude
-            return redirect('results',lat,lng)
+            category=calculate_category(report)
+            category_id=Category.objects.filter(label=category)[0].id
+            form_category=FormCategory(form_id_id=report.id,category_id_id=category_id)
+            form_category.save()
+            return redirect('results',report.id)
     else:
         form = DisasterForm()
 
     return render(request, 'form.html', {'form': form,'address_invalid':False})
+
+def calculate_category(report):
+    if report.destroyed100_0 or report.destroyed100_1:
+        return '91-100%'
+    if report.destroyed90_0 or report.destroyed90_1:
+        return '81-90%'
+    if report.destroyed80_0 or report.destroyed80_1 or report.destroyed80_2 or report.destroyed80_3 or report.destroyed80_4:
+        return 'Destroyed (75-80%)'
+    if report.water_conventionalhome_destroyed or report.water_mobilehome_destroyed:
+        return 'Destroyed (75-80%)'
+    if report.major74_0 or report.major74_1 or report.major74_2:
+        return '61-74%'
+    if report.major60_0 or report.major60_1:
+        return '51-60%'
+    if report.major50_0 or report.major50_1 or report.major50_2:
+        return '41-50%%'
+    if report.major40_0 or report.major40_1 or report.major40_2:
+        return '31-40%'
+    if report.major30_0 or report.major30_1 or report.major30_2 or report.major30_3:
+        return '21-30%'
+    if report.major20_0 or report.major20_1 or report.major20_2:
+        return 'Major (11-20%)'
+    if report.water_conventionalhome_major or report.water_mobilehome_major_nonplywood or report.water_mobilehome_major_plywood_yes:
+        return 'Major (11-20%)'
+    if report.minor10_0 or report.minor10_1 or report.minor10_2:
+        return 'Minor to 10%'
+    if report.water_conventionalhome_minor or report.water_mobilehome_minor or report.sewage:
+        return 'Minor to 10%'
+    return 'None'
 
 def make_report(form):
     lat,lng=get_location(form.cleaned_data['street_address'],form.cleaned_data['city'],form.cleaned_data['state'],form.cleaned_data['zipcode'])
@@ -134,21 +166,24 @@ longitude=lng)
 # manufactured_minor_2=form.cleaned_data['manufactured_minor_2'],
 # manufactured_minor_3=form.cleaned_data['manufactured_minor_3'])
 
-def get_locations():
-    latlongs=Report.objects.values('id','latitude','longitude')
+def get_locations(disaster_num):
+    latlongs=Report.objects.filter(fema_disaster_number=disaster_num).values('id','latitude','longitude')
     labels=[]
     map_labels=[]
     lats=[]
     lngs=[]
     for latlong in latlongs:
         id=latlong['id']
-        category=FormCategory.objects.get(pk=id).category_id
-        labels.append(category.label)
-        map_labels.append(category.map_label)
-        lat=latlong['latitude']
-        lng=latlong['longitude']
-        lats.append(round(lat,3))
-        lngs.append(round(lng,3))
+        try:
+            category=FormCategory.objects.get(pk=id).category_id
+            labels.append(category.label)
+            map_labels.append(category.map_label)
+            lat=latlong['latitude']
+            lng=latlong['longitude']
+            lats.append(round(lat,3))
+            lngs.append(round(lng,3))
+        except:
+            pass
 
     return zip(lats,lngs,map_labels,labels)
 
@@ -161,12 +196,12 @@ def get_location(street_address,city,state,zipcode):
     lng=data['results'][0]['geometry']['location']['lng']
     return round(lat,10),round(lng,10)
 
-def get_zip_code_damages():
+def get_zip_code_damages(disaster_num):
     zip_codes={'minor':[],'major':[],'destroyed':[]}
     minor=0
     major=1
     destroyed=7
-    zips = Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id GROUP BY zipcode')
+    zips = Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.fema_disaster_number = ' + str(disaster_num) + ' AND R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id WHERE C.label<>\'None\' GROUP BY zipcode')
     for zip in zips:
         if int(zip.damage)>=destroyed:
              zip_codes['destroyed'].append(zip.zipcode)
@@ -176,12 +211,12 @@ def get_zip_code_damages():
              zip_codes['minor'].append(zip.zipcode)
     return zip_codes
 
-def get_zip_code_num_reports():
+def get_zip_code_num_reports(disaster_num):
     zip_codes={'few':[],'several':[],'many':[]}
     few=1
     several=2
     many=4
-    zips = Report.objects.raw('SELECT MIN(id) AS id,zipcode,COUNT(*) AS num_reports FROM disaster.reports_report GROUP BY zipcode')
+    zips = Report.objects.raw('SELECT MIN(id) AS id,zipcode,COUNT(*) AS num_reports FROM disaster.reports_report WHERE fema_disaster_number = ' + str(disaster_num) + ' GROUP BY zipcode')
     for zip in zips:
         if zip.num_reports>=many:
              zip_codes['many'].append(zip.zipcode)
@@ -192,13 +227,23 @@ def get_zip_code_num_reports():
     return zip_codes
 
 
-def show_results(request,lat=None,lng=None):
+def show_results(request,id=None):
     map_data=MapData()
-    map_data.latitude=lat if lat is not None and lng is not None else 36.2062156
-    map_data.longitude=lng if lat is not None and lng is not None else -113.750551
-    map_data.zoom=11 if lat is not None and lng is not None else 4
-    map_data.locations=get_locations()
-    map_data.zip_code_damages=get_zip_code_damages()
-    map_data.zip_code_num_reports=get_zip_code_num_reports()
+    map_data.latitude = 36.2062156
+    map_data.longitude = -113.750551
+    map_data.zoom = 4
+    report = None
+    if id is not None:
+        report=Report.objects.get(id=id)
+        if report is not None:
+            map_data.latitude = report.latitude
+            map_data.longitude = report.longitude
+            map_data.zoom = 11
+    if report is None:
+        report=Report.objects.all().last()
+
+    map_data.locations=get_locations(report.fema_disaster_number)
+    map_data.zip_code_damages=get_zip_code_damages(report.fema_disaster_number)
+    map_data.zip_code_num_reports=get_zip_code_num_reports(report.fema_disaster_number)
     map_data.api_key=key
     return render(request, 'results.html',{'map_data': map_data})
