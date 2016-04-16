@@ -54,16 +54,15 @@
             <tr>
         </table>
         <table>
-            <td><h5>Check the box if the statement is true:</h5></td>
+            <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
             <tr>
                 <td>Does your residence carry a mortgage?</td>
                 <td>{{ form.mortgage }}</td>
             </tr>
             <tr>
-                <td>Has the residence been owned by you for less than 30 years?</td>
+                <td>Have you owned your home</td>
                 <td>{{ form.owned_less_than_30_years }}</td>
             </tr>
-            
         </table>
     <h2>Disaster Damage Information</h2>
         <table id="damageinfo", style="width: 90%">
@@ -73,6 +72,64 @@
                 <td>Approximate date of the disaster:</td>
                 <td>{{ form.date_of_disaster }}</td>
             </tr>
+        </table>
+        <table id="waterdamage", style="width: 85%">
+            <td><h5>Check the box if the statement is true:</h5></td>
+            <tr><td>Is there water damage in your home?</td><td>{{ form.water_damage }}</td></tr>
+            <tr><td>Do you have a mobile home?</td><td>{{ form.water_mobilehome }}</td></tr>
+            <tr><td>Is water level less than 6 inches deep on the floor?</td><td>{{ form.water_mobilehome_minor }}</td></tr>
+            <tr><td>Do you have plywood flooring in your mobile home?</td><td>{{ form.water_mobilehome_major_plywood}}</td></tr>
+            <tr><td>Is water between 6 inches to 2 feet deep on the plywood floor?</td><td>{{ form.water_mobilehome_major_plywood_yes }}</td></tr>
+            <tr><td>Is water between 1 inch to 2 feet deep on your nonplywood floor?</td><td>{{ form.water_mobilehome_major_nonplywood }}</td></tr>
+            <tr><td>Is water greater than 2 feet deep on your floor?</td><td>{{ form.water_mobilehome_destroyed }}</td></tr>
+            <tr><td>Is water between 2 and 3 inches on your first floor?</td><td>{{ form.water_conventionalhome_minor }}</td></tr>
+            <tr><td>Is water between 3 inches and 5 feet on your first floor??</td><td>{{ form.water_conventionalhome_major }}</td></tr>
+            <tr><td>Is water greater than 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_destroyed }}</td></tr>
+            <tr><td>Is there more than 1 foot of sewage in your home?</td><td>{{ form.sewage }}</td></tr>
+
+            <tr><td>Are there broken windows?</td><td>{{ form.minor10_0 }}</td></tr>
+            <tr><td>Is there damage to landscaping?</td><td>{{ form.minor10_1 }}</td></tr>
+            <tr><td>Is more than 50% of your home damaged?</td><td>{{ form.minor10_2 }}</td></tr>
+        </table>
+
+        <table id="major", style="width:85%">
+            <tr><td>If you have a chimney, is it no longer functional?</td><td>{{ form.major20_0 }}</td></tr>
+            <tr><td>If you have a carpet on the first floor, is the majority of it soaked?</td><td>{{ form.major20_1 }}</td></tr>
+            <tr><td>If you have a parking lot, it is damaged?</td><td>{{ form.major20_2 }}</td></tr>
+
+            <tr><td>Is there damage from smoke?</td><td>{{ form.major30_0 }}</td></tr>
+            <tr><td>Is the fire escape inoperable?</td><td>{{ form.major30_1 }}</td></tr>
+            <tr><td>Are roof tiles missing?</td><td>{{ form.major30_2 }}</td></tr>
+            <tr><td>Are your vehicles damaged?</td><td>{{ form.major30_3 }}</td></tr>
+
+            <tr><td>Is there minor damage to interior flooring?</td><td>{{ form.major40_0 }}</td></tr>
+            <tr><td>Is there minor damage to exterior walling?</td><td>{{ form.major40_1 }}</td></tr>
+            <tr><td>Are there fallen trees on your home?</td><td>{{ form.major40_2 }}</td></tr>
+
+            <tr><td>Is there at least one room that is destroyed?</td><td>{{ form.major50_0 }}</td></tr>
+            <tr><td>Are any exits blocked?</td><td>{{ form.major50_1 }}</td></tr>
+            <tr><td>Are any utilities damaged? (furnace, water heater, well, septic system, etc)</td><td>{{ form.major50_2 }}</td></tr>
+
+            <tr><td>Is the foundation of your home damaged?</td><td>{{ form.major60_0 }}</td></tr>
+            <tr><td>Is the insulation in your home damaged?</td><td>{{ form.major60_1 }}</td></tr>
+
+            <tr><td>Is the exterior frame of your home damaged?</td><td>{{ form.major74_0 }}</td></tr>
+            <tr><td>Is the roof off or collapsed?</td><td>{{ form.major74_1 }}</td></tr>
+            <tr><td>Are accessory outbuildings damaged?</td><td>{{ form.major74_2 }}</td></tr>
+        </table>
+
+        <table id="destroyed", style="width: 85%">
+            <tr><td>Is there flooding above the first floor?</td><td>{{ form.destroyed80_0 }}</td></tr>
+            <tr><td>Did your home move off its foundation?</td><td>{{ form.destroyed80_1 }}</td></tr>
+            <tr><td>Did any walls collapse?</td><td>{{ form.destroyed80_2 }}</td></tr>
+            <tr><td>Is your home permanently uninhabitable?</td><td>{{ form.destroyed80_3 }}</td></tr>
+            <tr><td>Does your home require demolition because it is in danger due to landslides, mudslides, sinkholes, beach erosion, etc?</td><td>{{ form.destroyed80_4 }}</td></tr>
+
+            <tr><td>Did your home come off the foundation?</td><td>{{ form.destroyed90_0 }}</td></tr>
+            <tr><td>Is the second floor of your home completely gone?</td><td>{{ form.destroyed90_1 }}</td></tr>
+
+            <tr><td>Is your home leveled above the foundation, and is the basement and foundation damaged?</td><td>{{ form.destroyed100_0 }}</td></tr>
+            <tr><td>Is there flooding above the eaves (edge of the roof)?</td><td>{{ form.destroyed100_1 }}</td></tr>
         </table>
     <input type="submit" value="Submit">
 </form>
