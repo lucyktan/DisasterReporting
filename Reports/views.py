@@ -36,31 +36,31 @@ def get_form(request):
     return render(request, 'form.html', {'form': form,'address_invalid':False})
 
 def calculate_category(report):
-    if report.destroyed100_0 or report.destroyed100_1:
+    if report.destroyed100_0 == 1 or report.destroyed100_1 == 1:
         return '91-100%'
-    if report.destroyed90_0 or report.destroyed90_1:
+    if report.destroyed90_0 == 1 or report.destroyed90_1 == 1:
         return '81-90%'
-    if report.destroyed80_0 or report.destroyed80_1 or report.destroyed80_2 or report.destroyed80_3 or report.destroyed80_4:
+    if report.destroyed80_0 == 1 or report.destroyed80_1 == 1 or report.destroyed80_2 == 1 or report.destroyed80_3 == 1 or report.destroyed80_4 == 1:
         return 'Destroyed (75-80%)'
-    if report.water_conventionalhome_destroyed or report.water_mobilehome_destroyed:
+    if report.water_conventionalhome_destroyed == 1 or report.water_mobilehome_destroyed == 1:
         return 'Destroyed (75-80%)'
-    if report.major74_0 or report.major74_1 or report.major74_2:
+    if report.major74_0 == 1 or report.major74_1 == 1 or report.major74_2 == 1:
         return '61-74%'
-    if report.major60_0 or report.major60_1:
+    if report.major60_0 == 1 or report.major60_1 == 1:
         return '51-60%'
-    if report.major50_0 or report.major50_1 or report.major50_2:
-        return '41-50%%'
-    if report.major40_0 or report.major40_1 or report.major40_2:
+    if report.major50_0 == 1 or report.major50_1 == 1 or report.major50_2 == 1:
+        return '41-50%'
+    if report.major40_0 == 1 or report.major40_1 == 1 or report.major40_2 == 1:
         return '31-40%'
-    if report.major30_0 or report.major30_1 or report.major30_2 or report.major30_3:
+    if report.major30_0 == 1 or report.major30_1 == 1 or report.major30_2 == 1 or report.major30_3 == 1:
         return '21-30%'
-    if report.major20_0 or report.major20_1 or report.major20_2:
+    if report.major20_0 == 1 or report.major20_1 == 1 or report.major20_2 == 1:
         return 'Major (11-20%)'
-    if report.water_conventionalhome_major or report.water_mobilehome_major_nonplywood or report.water_mobilehome_major_plywood_yes:
+    if report.water_conventionalhome_major == 1 or report.water_mobilehome_major_nonplywood == 1 or report.water_mobilehome_major_plywood_yes == 1:
         return 'Major (11-20%)'
-    if report.minor10_0 or report.minor10_1 or report.minor10_2:
+    if report.minor10_0 == 1 or report.minor10_1 == 1 or report.minor10_2 == 1:
         return 'Minor to 10%'
-    if report.water_conventionalhome_minor or report.water_mobilehome_minor or report.sewage:
+    if report.water_conventionalhome_minor == 1 or report.water_mobilehome_minor == 1 or report.sewage == 1:
         return 'Minor to 10%'
     return 'None'
 
