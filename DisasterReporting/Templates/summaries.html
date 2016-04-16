@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+
+{% block body %}
+
+<div id="content1">
+	<form method="post">
+    {% csrf_token %}
+    <select name="disaster_number">
+        {% for disaster_number in disaster_numbers %}
+            <option value="{{ disaster_number }}">{{ disaster_number }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Submit" style="text-align: center"/>
+</form>
+</div>
+
+<style>
+
+#content1{
+}
+
+</style>
+
+{% endblock %}
+
