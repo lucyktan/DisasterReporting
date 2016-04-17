@@ -84,7 +84,7 @@ class DisasterForm(forms.Form):
     insured=forms.ChoiceField(label='Residence is insured',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
     mortgage=forms.ChoiceField(required=False, label='Residence carries a mortgage',choices=((i,yes_no_unsure[i]) for i in range(len(yes_no_unsure))))
     owned_less_than_30_years=forms.ChoiceField(required=False, label='Residence has been owned by you for less than 30 years',choices=((i,yes_no[i]) for i in range(len(yes_no))))
-    predisaster_value=forms.DecimalField(label='Predisaster value of residence',decimal_places=2)
+    predisaster_value=forms.DecimalField(label='Predisaster value of residence',decimal_places=2,required=False)
 
     water_damage=forms.ChoiceField(label='Is there water damage in your home?', choices=((i,yes_no[i]) for i in range(len(yes_no))))
 

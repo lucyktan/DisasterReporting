@@ -14,6 +14,7 @@ from Reports.models import FormCategory
 from Reports.models import Category
 from forms import DisasterForm
 from DisasterReporting.settings import GOOGLE_API_KEY as key
+from DisasterReporting.settings import DISASTER_TIME_CONSTANT
 import urllib2
 import urllib
 import json
@@ -45,11 +46,11 @@ def get_form(request):
                 return render(request, 'form.html', {'form': form,'address_invalid':True})
 
             if unique_address(report) == 1:
+                report.predisaster_value = estimate_home_value(report)
                 percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
                 report.estimated_damage = estimated_damage
                 report.perDam = percent_damage
                 report.fema_disaster_number = disaster_number(report)
-                report.predisaster_value = estimate_home_value(report)
                 report.save()
                 category=calculate_category(report)
                 category_id=Category.objects.filter(label=category)[0].id
@@ -63,8 +64,8 @@ def get_form(request):
 
 def unique_address(report):
     inpDate = report.date_of_disaster
-    start = inpDate + datetime.timedelta(days=-7)
-    end = inpDate + datetime.timedelta(days= 7)
+    start = inpDate + datetime.timedelta(days=-DISASTER_TIME_CONSTANT)
+    end = inpDate + datetime.timedelta(days=DISASTER_TIME_CONSTANT)
     add = Report.objects.filter(date_of_disaster__range = (start,end), street_address = report.street_address, city=report.city, state=report.state, zipcode=report.zipcode)
     if add.exists():
         return 0
@@ -72,7 +73,7 @@ def unique_address(report):
         return 1
 
 def estimate_home_value(report):
-    if report.predisaster_value == 0:
+    if report.predisaster_value == 0 or report.predisaster_value is None:
         if homevalue.objects.raw('SELECT id, count(zipcode) as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c >0:
             return homevalue.objects.raw('SELECT id, medhome as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c
         else:
@@ -341,11 +342,11 @@ def edit_form(request,formid):
             except:
                 return render(request, 'form.html', {'form': form,'address_invalid':True})
 
+            report.predisaster_value = estimate_home_value(report)
             percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
             report.estimated_damage = estimated_damage
             report.perDam = percent_damage
             report.fema_disaster_number = disaster_number(report)
-            report.predisaster_value = estimate_home_value(report)
             kwargs = update_report(report)
             Report.objects.filter(id=formid).update(**kwargs)
             category = calculate_category(report)
