@@ -332,23 +332,30 @@ def edit_form(request,formid):
     old_report=Report.objects.get(id=formid)
     if old_report.username != request.user.username:
         return HttpResponseForbidden()
+    if request.method == 'POST':
+        form = DisasterForm(request.POST)
+        if form.is_valid():
+            try:
+                report=make_report(form)
+                report.username=request.user.username
+            except:
+                return render(request, 'form.html', {'form': form,'address_invalid':True})
+
+            percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
+            report.estimated_damage = estimated_damage
+            report.perDam = percent_damage
+            report.fema_disaster_number = disaster_number(report)
+            report.predisaster_value = estimate_home_value(report)
+            kwargs = update_report(report)
+            Report.objects.filter(id=formid).update(**kwargs)
+            category = calculate_category(report)
+            category_id = Category.objects.filter(label=category)[0].id
+            FormCategory.objects.filter(form_id_id=report.id).update(category_id_id=category_id)
+            return redirect('results',formid)
+
     else:
-        if request.method== 'POST':
-            form = DisasterForm(request.POST)
-            if form.is_valid():
-                try:
-                    new_report=make_report(form)
-                    new_report.username=request.user.username
-                except:
-                    return render(request, 'form.html', {'form': form,'address_invalid':True})
-                kwargs=update_report(new_report)
-                Report.objects.filter(id=formid).update(**kwargs)
-                lat=new_report.latitude
-                lng=new_report.longitude
-                return redirect('results',lat,lng)
-        else:
-            form=make_form(old_report)
-            return render(request, 'form.html', {'form': form,'address_invalid':False})
+        form=make_form(old_report)
+        return render(request, 'form.html', {'form': form,'address_invalid':False})
 
 def make_form(old_report):
     data=vars(old_report)
@@ -428,7 +435,10 @@ def update_report(new_report):
 'destroyed100_0' : new_report.destroyed100_0,
 'destroyed100_1' : new_report.destroyed100_1,
 'latitude' : new_report.latitude,
-'longitude' : new_report.longitude}
+'longitude' : new_report.longitude,
+'estimated_damage':new_report.estimated_damage,
+'perDam':new_report.perDam
+}
 
 def make_report(form):
     lat,lng=get_location(form.cleaned_data['street_address'],form.cleaned_data['city'],form.cleaned_data['state'],form.cleaned_data['zipcode'])

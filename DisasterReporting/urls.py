@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^createaccount/$', createaccount),
     url(r'^login/$', login),    
     url(r'^logout/$', logout_view),
-    url(r'^form/', views.get_form),
+    url(r'^form/$', views.get_form),
     url(r'^results/(?P<id>\d+)', views.show_results, name='results'),
     url(r'^results/', views.show_results, name='results'),
     url(r'^form/$', views.get_form),
