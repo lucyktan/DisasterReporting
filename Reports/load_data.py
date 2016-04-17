@@ -13,6 +13,7 @@ from Reports.models import owners
 from Reports.models import renters
 from Reports.models import Report
 from Reports.models import individual_estimate_model_coefficients
+from Reports.models import Category
 
 def import_disaster_history():
     disaster_history.objects.all().delete()
@@ -246,10 +247,22 @@ def import_individual_estimate_model_coefficients():
             model.coefficient = row[1]
             model.save()
 
+def import_categories():
+    Category.objects.all().delete()
+    csv_filepathname = os.getcwd()+'/categories.csv'
+    dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
+    for row in dataReader:
+        category = Category()
+        category.map_label = row[0]
+        category.label = row[1]
+        category.save()
+
+
 #import_homevalue()
 #import_disaster_history()
 #import_owners()
 #import_renters()
 #import_report_owner()
 #import_report_renter()
+#import_categories()
 import_individual_estimate_model_coefficients()

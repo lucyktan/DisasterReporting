@@ -73,6 +73,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DisasterReporting.wsgi.application'
 
+GOOGLE_API_KEY='AIzaSyBOquNNSRQxs7qwnPE9sIXvdWE2TTpwYwc'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
