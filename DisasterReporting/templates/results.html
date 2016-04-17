@@ -2,7 +2,7 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    <button id="toggle_show_map" type="button">Show map of damages</button>
+    <button id="toggle_show_map" type="button">Show damage estimate</button>
     <div id="estimate">
         <p>The estimated grant that FEMA would provide you if a presidential disaster declaration is made for this event is ${{ estimate }}.</p>
         <p>{{total }}.</p>
@@ -143,15 +143,14 @@
         return where;
     }
     $(document).ready(function () {
-        $('#map').hide();
-        $('#toggle').hide();
+        $('#estimate').hide();
     })
     $('#toggle_show_map').click(function(){
-        if($(this).text()=='Show map of report frequencies'){
+        if($(this).text()=='Show map of report frequencies'||$(this).text()=='Show map of damages'){
             $(this).text('Show damage estimate');
-            $('#map').hide();
-            $('#toggle').hide();
-            $('#estimate').show();
+            $('#map').show();
+            $('#toggle').show();
+            $('#estimate').hide();
         }else{
             if($('#toggle').text()=='Show map of report frequencies'){
                 $(this).text('Show map of damages');
@@ -159,9 +158,9 @@
             else{
                 $(this).text('Show map of report frequencies');
             }
-            $('#toggle').show();
-            $('#map').show();
-            $('#estimate').hide();
+            $('#toggle').hide();
+            $('#map').hide();
+            $('#estimate').show();
         }
     });
     $('#toggle').click(function(){
