@@ -19,6 +19,7 @@ from DisasterReporting.views import home
 from DisasterReporting.views import createaccount
 from DisasterReporting.views import login
 from DisasterReporting.views import logout_view
+from DisasterReporting.views import formhistory
 from Reports import views
 
 urlpatterns = [
@@ -29,7 +30,10 @@ urlpatterns = [
     url(r'^logout/$', logout_view),
     url(r'^form/', views.get_form),
     url(r'^results/(?P<id>\d+)', views.show_results, name='results'),
-    url(r'^results/', views.show_results, name='results')
+    url(r'^results/', views.show_results, name='results'),
+    url(r'^form/$', views.get_form),
+    url(r'^form/(?P<formid>\d+)', views.edit_form),
+    url(r'^formhistory/$',formhistory)
     ]
 
 

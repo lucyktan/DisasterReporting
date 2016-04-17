@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden
 from Reports.models import Report
 from Reports.models import homevalue
 from Reports.models import individual_estimate_model_coefficients
@@ -22,12 +23,13 @@ import json
 def get_form(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
-        
+
     if request.method == 'POST':
         form = DisasterForm(request.POST)
         if form.is_valid():
             try:
                 report=make_report(form)
+                report.username=request.user.username
             except:
                 return render(request, 'form.html', {'form': form,'address_invalid':True})
 
@@ -313,11 +315,116 @@ def calculate_category(report):
         return 'Minor to 10%'
     return 'None'
 
+def edit_form(request,formid):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/login/')
+    old_report=Report.objects.get(id=formid)
+    if old_report.username != request.user.username:
+        return HttpResponseForbidden()
+    else:
+        if request.method== 'POST':
+            form = DisasterForm(request.POST)
+            if form.is_valid():
+                try:
+                    new_report=make_report(form)
+                    new_report.username=request.user.username
+                except:
+                    return render(request, 'form.html', {'form': form,'address_invalid':True})
+                kwargs=update_report(new_report)
+                Report.objects.filter(id=formid).update(**kwargs)
+                lat=new_report.latitude
+                lng=new_report.longitude
+                return redirect('results',lat,lng)
+        else:
+            form=make_form(old_report)
+            return render(request, 'form.html', {'form': form,'address_invalid':False})
+
+def make_form(old_report):
+    data=vars(old_report)
+    return DisasterForm(initial=data)
+
+def update_report(new_report):
+    return {'first_name' : new_report.first_name,
+'last_name' : new_report.last_name,
+'street_address' : new_report.street_address,
+'address_line_2' : new_report.address_line_2,
+'city' : new_report.city,
+'state' : new_report.state,
+'zipcode' : new_report.zipcode,
+'type_of_residence' : new_report.type_of_residence,
+'type_of_occupancy' : new_report.type_of_occupancy,
+'type_of_disaster' : new_report.type_of_disaster,
+'date_of_disaster' : new_report.date_of_disaster,
+'insured' : new_report.insured,
+'mortgage' : new_report.mortgage,
+'owned_less_than_30_years' : new_report.owned_less_than_30_years,
+'predisaster_value' : new_report.predisaster_value,
+
+'water_damage' : new_report.water_damage,
+
+'water_mobilehome' : new_report.water_mobilehome,
+
+'water_mobilehome_minor' : new_report.water_mobilehome_minor,
+
+'water_mobilehome_major_plywood' : new_report.water_mobilehome_major_plywood,
+'water_mobilehome_major_plywood_yes' : new_report.water_mobilehome_major_plywood_yes,
+'water_mobilehome_major_nonplywood' : new_report.water_mobilehome_major_nonplywood,
+'water_mobilehome_destroyed' : new_report.water_mobilehome_destroyed,
+
+'water_conventionalhome_minor' : new_report.water_conventionalhome_minor,
+'water_conventionalhome_major' : new_report.water_conventionalhome_major,
+'water_conventionalhome_destroyed' : new_report.water_conventionalhome_destroyed,
+
+'sewage' : new_report.sewage,
+
+'minor10_0' : new_report.minor10_0,
+'minor10_1' : new_report.minor10_1,
+'minor10_2' : new_report.minor10_2,
+
+'major20_0' : new_report.major20_0,
+'major20_1' : new_report.major20_1,
+'major20_2' : new_report.major20_2,
+
+'major30_0' : new_report.major30_0,
+'major30_1' : new_report.major30_1,
+'major30_2' : new_report.major30_2,
+'major30_3' : new_report.major30_3,
+
+'major40_0' : new_report.major40_0,
+'major40_1' : new_report.major40_1,
+'major40_2' : new_report.major40_2,
+
+'major50_0' : new_report.major50_0,
+'major50_1' : new_report.major50_1,
+'major50_2' : new_report.major50_2,
+
+'major60_0' : new_report.major60_0,
+'major60_1' : new_report.major60_1,
+
+'major74_0' : new_report.major74_0,
+'major74_1' : new_report.major74_1,
+'major74_2' : new_report.major74_2,
+
+'destroyed80_0' : new_report.destroyed80_0,
+'destroyed80_1' : new_report.destroyed80_1,
+'destroyed80_2' : new_report.destroyed80_2,
+'destroyed80_3' : new_report.destroyed80_3,
+'destroyed80_4' : new_report.destroyed80_4,
+
+'destroyed90_0' : new_report.destroyed90_0,
+'destroyed90_1' : new_report.destroyed90_1,
+
+'destroyed100_0' : new_report.destroyed100_0,
+'destroyed100_1' : new_report.destroyed100_1,
+'latitude' : new_report.latitude,
+'longitude' : new_report.longitude}
+
 def make_report(form):
     lat,lng=get_location(form.cleaned_data['street_address'],form.cleaned_data['city'],form.cleaned_data['state'],form.cleaned_data['zipcode'])
     return Report(first_name=form.cleaned_data['first_name'],
 last_name=form.cleaned_data['last_name'],
 street_address=form.cleaned_data['street_address'],
+address_line_2=form.cleaned_data['address_line_2'],
 city=form.cleaned_data['city'],
 state=form.cleaned_data['state'],
 zipcode=form.cleaned_data['zipcode'],
