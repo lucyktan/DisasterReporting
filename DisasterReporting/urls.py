@@ -33,7 +33,8 @@ urlpatterns = [
     url(r'^results/', views.show_results, name='results'),
     url(r'^form/$', views.get_form),
     url(r'^form/(?P<formid>\d+)', views.edit_form),
-    url(r'^formhistory/$',formhistory)
+    url(r'^formhistory/$',formhistory),
+    url(r'^summaries/',views.get_summaries)
     ]
 
 

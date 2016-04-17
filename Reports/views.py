@@ -17,6 +17,17 @@ from DisasterReporting.settings import GOOGLE_API_KEY as key
 import urllib2
 import urllib
 import json
+import csv
+
+from django.http import StreamingHttpResponse
+
+class Echo(object):
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
 """Renders the Report Damage form depending on whether the user is logged in"""
 
@@ -577,3 +588,24 @@ def show_results(request,id=None):
     map_data.api_key=key
     total_estimate = total_disaster_estimate(report)
     return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate})
+
+def get_summaries(request):
+    if request.method != 'POST':
+        l=list()
+        disaster_numbers=[num[0] for num in Report.objects.values_list('fema_disaster_number').distinct()]
+        disaster_numbers.insert(0,'All')
+        return render(request,'summaries.html',{'disaster_numbers':disaster_numbers})
+    num = request.POST['disaster_number']
+    if num == 'All':
+        data=Report.objects.values_list('zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'perDam', 'estimated_damage', 'fema_disaster_number')
+    else:
+        data=Report.objects.values_list('zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'perDam', 'estimated_damage', 'fema_disaster_number').filter(fema_disaster_number=num)
+
+    rows = [(idx,)+data[idx] for idx in range(len(data))]
+    pseudo_buffer = Echo()
+    writer = csv.writer(pseudo_buffer)
+    rows.insert(0,('id','zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'percent_damaged', 'estimated_damage', 'disaster_number'))
+    response = StreamingHttpResponse((writer.writerow(row) for row in rows),
+                                     content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="disaster_summary_'+str(num)+'.csv"'
+    return response
