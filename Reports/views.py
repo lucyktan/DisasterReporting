@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from Reports.models import Report
+from Reports.models import homevalue
+from Reports.models import individual_estimate_model_coefficients
+import math
+import decimal
+import datetime
+import random
 from Reports.models import MapData
 from Reports.models import FormCategory
 from forms import DisasterForm
@@ -22,15 +28,257 @@ def get_form(request):
             try:
                 report=make_report(form)
             except:
-                return render(request, 'form.html', {'form': form,'address_invalid':True})
-            report.save()
-            lat=report.latitude
-            lng=report.longitude
-            return redirect('results',lat,lng)
+                raise
+                #return render(request, 'form.html', {'form': form,'address_invalid':True})
+
+            if unique_address(report) == 1:
+                percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
+                report.estimated_damage = estimated_damage
+                report.perDam = percent_damage
+                report.fema_disaster_number = disaster_number(report)
+                report.predisaster_value = estimate_home_value(report)
+                total_estimate = total_disaster_estimate(report)
+                lat=report.latitude
+                lng=report.longitude
+                report.save()
+                return redirect('results','{0:.2f}'.format(estimated_damage), total_estimate,lat,lng)
     else:
         form = DisasterForm()
 
     return render(request, 'form.html', {'form': form,'address_invalid':False})
+
+def unique_address(report):
+    inpDate = report.date_of_disaster
+    start = inpDate + datetime.timedelta(days=-7)
+    end = inpDate + datetime.timedelta(days= 7)
+    add = Report.objects.filter(date_of_disaster__range = (start,end), street_address = report.street_address, city=report.city, state=report.state, zipcode=report.zipcode)
+    if add.exists():
+        return 0
+    else:
+        return 1
+
+def estimate_home_value(report):
+    if report.predisaster_value == 0:
+        if homevalue.objects.raw('SELECT id, count(zipcode) as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c >0:
+            return homevalue.objects.raw('SELECT id, medhome as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c
+        else:
+            ##median home value in US
+            return 188900.0
+    else:
+       return decimal.Decimal(report.predisaster_value)
+
+def calculate_individual_damage_estimate(report):
+    coefficients=individual_estimate_model_coefficients.objects.all()
+    cur_sum=decimal.Decimal(0.0)
+    has_damage=False
+    for coefficient in coefficients:
+        if should_add_coefficient(coefficient.variable,'owned',report,'type_of_occupancy','Own as primary residence'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'multifamily',report,'type_of_residence','Multi-Family'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'singlefamily',report,'type_of_residence','Single Family'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'earthquake',report,'type_of_disaster','Earthquake'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'fire',report,'type_of_disaster','Fire'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'flood',report,'type_of_disaster','Flooding'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'hurricane',report,'type_of_disaster','Hurricane/Tropical storm'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'mudslide',report,'type_of_disaster','Mud/Landslide'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'other',report,'type_of_disaster','Other'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'tornado',report,'type_of_disaster','Tornado'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'typhoon',report,'type_of_disaster','Typhoon'):
+            cur_sum+=coefficient.coefficient
+        elif should_add_coefficient(coefficient.variable,'sewage_1',report,'sewage',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'minor10_1_1',report,'minor10_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'minor10_2_1',report,'minor10_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_0_1',report,'major20_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_1_1',report,'major20_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major20_2_1',report,'major20_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_0_1',report,'major30_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_1_1',report,'major30_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_2_1',report,'major30_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major30_3_1',report,'major30_3',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_0_1',report,'major40_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_1_1',report,'major40_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major40_2_1',report,'major40_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_0_1',report,'major50_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_1_1',report,'major50_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major50_2_1',report,'major50_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major60_0_1',report,'major60_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major60_1_1',report,'major60_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_0_1',report,'major74_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_1_1',report,'major74_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'major74_2_1',report,'major74_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_0_1',report,'destroyed80_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_1_1',report,'destroyed80_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_2_1',report,'destroyed80_2',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_3_1',report,'destroyed80_3',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed80_4_1',report,'destroyed80_4',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed90_0_1',report,'destroyed90_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed90_1_1',report,'destroyed90_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed100_0_1',report,'destroyed100_0',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'destroyed100_1_1',report,'destroyed100_1',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_damage_1',report,'water_damage',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_1',report,'water_mobilehome',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_plywood_1',report,'water_mobilehome_major_plywood',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_nonplyw_1',report,'water_mobilehome_major_nonplywood',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_destroyed_1',report,'water_mobilehome_destroyed',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_major_1',report,'water_conventionalhome_major',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_destroy_1',report,'water_conventionalhome_destroyed',1):
+            cur_sum+=coefficient.coefficient
+            has_damage=True
+        elif coefficient.variable == 'predisaster_value':
+            cur_sum+=coefficient.coefficient * report.predisaster_value
+        elif coefficient.variable == 'Constant':
+            cur_sum+=coefficient.coefficient
+
+    percent_damage = math.exp(cur_sum)/(1+math.exp(cur_sum)) if has_damage else 0
+    estimated_damage = decimal.Decimal(percent_damage) * report.predisaster_value
+    if estimated_damage > 31900: #max FEMA grant amount
+        estimated_damage = 31900
+    return percent_damage,estimated_damage
+
+def should_add_coefficient(variable,var_name,report,report_var_name,report_var_value):
+    return variable=='var_name' and report.get_attr(report_var_name) == report_var_value
+
+#calculates total disaster cost
+def total_disaster_estimate(report):
+    if report.type_of_disaster == 'Hurricane/Tropical Storm':
+        num = int(disaster_number(report))
+        totalEntered = Report.objects.raw('SELECT id, count(*) as c FROM disaster.reports_report WHERE fema_disaster_number = %s',[num])[0].c
+        uniqueZip = Report.objects.raw('SELECT id, count(DISTINCT zipcode) as c FROM disaster.reports_report WHERE fema_disaster_number = %s',[num])[0].c
+        ####   probability of a new point being in a unique zipcode (based on historical data)
+        big = ((1-.01011463)**(uniqueZip-1))*((.01011463)**(totalEntered-uniqueZip-2))
+        med = ((1-.08623204)**(uniqueZip-1))*((.08623204)**(totalEntered-uniqueZip-2))
+        small = ((1-.06405369)**(uniqueZip-1))*((.06405369)**(totalEntered-uniqueZip-2))
+        probBig = big/(big + med + small)
+        probMed = med/(big + med +small)
+
+        rand = random.uniform(0,1)
+        if rand <= probBig:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*30000
+            estu = 5425.08*60000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+        elif rand > probBig & rand <= probBig + probMed:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*10000
+            estu = 5425.08*30000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+        else:
+            ## based on  damage estimate for hurricanes
+            estl = 5425.08*100
+            estu = 5425.08*10000
+            return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+    elif report.type_of_disaster == "Tornado":
+        ## based on  damage estimate for tornados
+        estl = 4410.958*380
+        estu = 4410.958*1500
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+    elif report.type_of_disaster == 'Earthquake':
+        ## based on  damage estimate for earthquakes
+        estl = 3305.191*3000
+        estu = 3305.191*6000
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+    else:
+        ## based on  damage estimate for floods
+        estl = 3564.974*100
+        estu = 3564.974*6000
+        return "Estimated total fema payout between %d and %d" % (estl,estu)
+
+#sets disaster number
+def disaster_number(report):
+   inpState = report.state
+   inpDisType  = report.type_of_disaster
+   inpDate = report.date_of_disaster
+   start = inpDate + datetime.timedelta(days=-4)
+   end = inpDate + datetime.timedelta(days= 4)
+   num = Report.objects.filter(date_of_disaster__range = (start,end), state = inpState, type_of_disaster = inpDisType)
+   if not num.exists():
+        return Report.objects.raw('SELECT id, max(fema_disaster_number) as a FROM disaster.reports_report')[0].a + 1
+   else:
+        return Report.objects.filter(date_of_disaster__range = (start,end), state = inpState, type_of_disaster = inpDisType)[0].fema_disaster_number
+
 
 def make_report(form):
     lat,lng=get_location(form.cleaned_data['street_address'],form.cleaned_data['city'],form.cleaned_data['state'],form.cleaned_data['zipcode'])
@@ -47,7 +295,6 @@ date_of_disaster=form.cleaned_data['date_of_disaster'],
 insured=form.cleaned_data['insured'],
 mortgage=form.cleaned_data['mortgage'],
 owned_less_than_30_years=form.cleaned_data['owned_less_than_30_years'],
-predisaster_value=form.cleaned_data['predisaster_value'], 
 
 water_damage = form.cleaned_data['water_damage'],
 
@@ -63,6 +310,7 @@ water_mobilehome_destroyed = form.cleaned_data['water_mobilehome_destroyed'],
 water_conventionalhome_minor = form.cleaned_data['water_conventionalhome_minor'],
 water_conventionalhome_major = form.cleaned_data['water_conventionalhome_major'],
 water_conventionalhome_destroyed = form.cleaned_data['water_conventionalhome_destroyed'],
+predisaster_value=form.cleaned_data['predisaster_value'],
 
 sewage = form.cleaned_data['sewage'],
 
@@ -107,32 +355,6 @@ destroyed100_0 = form.cleaned_data['destroyed100_0'],
 destroyed100_1 = form.cleaned_data['destroyed100_1'],
 latitude=lat,
 longitude=lng)
-
-# normal_water=form.cleaned_data['normal_water'],
-# normal_destroyed_0=form.cleaned_data['normal_destroyed_0'],
-# normal_destroyed_1=form.cleaned_data['normal_destroyed_1'],
-# normal_destroyed_2=form.cleaned_data['normal_destroyed_2'],
-# normal_destroyed_3=form.cleaned_data['normal_destroyed_3'],
-# normal_major_0=form.cleaned_data['normal_major_0'],
-# normal_major_1=form.cleaned_data['normal_major_1'],
-# normal_major_2=form.cleaned_data['normal_major_2'],
-# normal_major_3=form.cleaned_data['normal_major_3'],
-# normal_minor_0=form.cleaned_data['normal_minor_0'],
-# normal_minor_1=form.cleaned_data['normal_minor_1'],
-# normal_minor_2=form.cleaned_data['normal_minor_2'],
-# normal_minor_3=form.cleaned_data['normal_minor_3'],
-# manufactured_destroyed_0=form.cleaned_data['manufactured_destroyed_0'],
-# manufactured_destroyed_1=form.cleaned_data['manufactured_destroyed_1'],
-# manufactured_destroyed_2=form.cleaned_data['manufactured_destroyed_2'],
-# manufactured_destroyed_3=form.cleaned_data['manufactured_destroyed_3'],
-# manufactured_major_0=form.cleaned_data['manufactured_major_0'],
-# manufactured_major_1=form.cleaned_data['manufactured_major_1'],
-# manufactured_major_2=form.cleaned_data['manufactured_major_2'],
-# manufactured_major_3=form.cleaned_data['manufactured_major_3'],
-# manufactured_minor_0=form.cleaned_data['manufactured_minor_0'],
-# manufactured_minor_1=form.cleaned_data['manufactured_minor_1'],
-# manufactured_minor_2=form.cleaned_data['manufactured_minor_2'],
-# manufactured_minor_3=form.cleaned_data['manufactured_minor_3'])
 
 def get_locations():
     latlongs=Report.objects.values('id','latitude','longitude')
@@ -191,8 +413,7 @@ def get_zip_code_num_reports():
              zip_codes['few'].append(zip.zipcode)
     return zip_codes
 
-
-def show_results(request,lat=None,lng=None):
+def show_results(request,estimate=0.0, total = '',lat=None,lng=None):
     map_data=MapData()
     map_data.latitude=lat if lat is not None and lng is not None else 36.2062156
     map_data.longitude=lng if lat is not None and lng is not None else -113.750551
@@ -201,4 +422,4 @@ def show_results(request,lat=None,lng=None):
     map_data.zip_code_damages=get_zip_code_damages()
     map_data.zip_code_num_reports=get_zip_code_num_reports()
     map_data.api_key=key
-    return render(request, 'results.html',{'map_data': map_data})
+    return render(request, 'results.html',{'map_data': map_data,'estimate':estimate,'total':total})

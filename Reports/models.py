@@ -146,10 +146,14 @@ class Report(models.Model):
     destroyed100_1 = models.IntegerField(default=0)
 
     perDam= models.DecimalField(max_digits=20,decimal_places=4, default=-1.0000)
-    estimated_damage= models.DecimalField(max_digits=20,decimal_places=2, default=-1.00)
+    estimated_damage = models.DecimalField(max_digits=20,decimal_places=2, default=-1.00)
     fema_disaster_number = models.IntegerField(default=-1)
     latitude=models.DecimalField(max_digits=15,decimal_places=10,default=-9999)
     longitude=models.DecimalField(max_digits=15,decimal_places=10,default=-9999)
+
+class individual_estimate_model_coefficients(models.Model):
+    variable=models.CharField(max_length=50)
+    coefficient=models.DecimalField(max_digits=20,decimal_places=8)
 
 class MapData():
     locations=[]

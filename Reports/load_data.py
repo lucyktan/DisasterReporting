@@ -12,6 +12,7 @@ from Reports.models import disaster_history
 from Reports.models import owners
 from Reports.models import renters
 from Reports.models import Report
+from Reports.models import individual_estimate_model_coefficients
 from Reports.models import Category
 
 def import_disaster_history():
@@ -235,6 +236,17 @@ def import_report_renter():
             disaster.water_conventionalhome_destroyed = row[57]
             disaster.save()
 
+def import_individual_estimate_model_coefficients():
+    individual_estimate_model_coefficients.objects.all().delete()
+    csv_filepathname = os.getcwd()+'/Stata/individual_model_coefficients_logistic.csv'
+    dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
+    for row in dataReader:
+        if row[0]!='Variable': # Ignore the header row, import everything else
+            model = individual_estimate_model_coefficients()
+            model.variable = row[0]
+            model.coefficient = row[1]
+            model.save()
+
 def import_categories():
     Category.objects.all().delete()
     csv_filepathname = os.getcwd()+'/categories.csv'
@@ -245,10 +257,12 @@ def import_categories():
         category.label = row[1]
         category.save()
 
-import_homevalue()
-import_disaster_history()
-import_owners()
-import_renters()
-import_report_owner()
-import_report_renter()
+
+#import_homevalue()
+#import_disaster_history()
+#import_owners()
+#import_renters()
+#import_report_owner()
+#import_report_renter()
 #import_categories()
+import_individual_estimate_model_coefficients()
