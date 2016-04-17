@@ -596,12 +596,15 @@ def show_results(request,id=None):
     if report is None:
         report=Report.objects.all().last()
 
+    show_estimate=False
+    if request.user.is_authenticated() and request.user.username == report.username:
+        show_estimate=True
     map_data.locations=get_locations(report.fema_disaster_number)
     map_data.zip_code_damages=get_zip_code_damages(report.fema_disaster_number)
     map_data.zip_code_num_reports=get_zip_code_num_reports(report.fema_disaster_number)
     map_data.api_key=key
     total_estimate = total_disaster_estimate(report)
-    return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate})
+    return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate,'show_estimate':show_estimate})
 
 def get_summaries(request):
     if request.method != 'POST':

@@ -2,11 +2,13 @@
 {% block head %}
 {% endblock %}
 {% block body %}
+    {% if show_estimate %}
     <button id="toggle_show_map" type="button">Show damage estimate</button>
     <div id="estimate">
         <p>The estimated grant that FEMA would provide you if a presidential disaster declaration is made for this event is ${{ estimate }}.</p>
         <p>{{total }}.</p>
     </div>
+    {% endif %}
     <button id="toggle" type="button">Show map of report frequencies</button>
     <div id="map"></div>
     {% for type,zips in map_data.zip_code_damages.iteritems %}
