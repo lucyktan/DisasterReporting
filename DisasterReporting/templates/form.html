@@ -5,22 +5,171 @@
 <div id="content1">
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <!-- {{ form.as_p }} -->
+    {{ form.non_field_errors }}
+    <h2>Personal Information</h2>
+        <table id="personalinfo", style="width: 90%">
+            <tr>
+                <td>First name:</td>    
+                <td>{{ form.first_name }}</td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td>{{ form.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Street address:</td>
+                <td>{{ form.street_address }}</td>
+            </tr>
+            <tr>
+                <td>Address line 2:</td>
+                <td>{{ form.address_line_2 }}</td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td>{{ form.city }}</td>
+            </tr>
+            <tr>
+                <td>State:</td>
+                <td>{{ form.state }}</td>
+            </tr>
+            <tr>
+                <td>Zip code:</td>
+                <td>{{ form.zipcode }}</td>
+            </tr>
+        </table>
+    <h2>Property Information</h2>
+        <table id="propertyinfo", style="width: 80%">
+            <tr><td>Type of Residence:</td></tr>
+            <tr><td>{{ form.type_of_residence }}</td></tr>
+            <tr><td>Type of Occupancy:</td></tr>
+            <tr><td>{{ form.type_of_occupancy }}</td></tr>
+            <tr>
+                <td>Is your residence insured?</td>
+                <td>{{ form.insured }}</td>
+            </tr>
+            <tr>
+                <td>What was the market value of your property before the disaster? Enter 0 if you do not know.</td>
+                <td>{{ form.predisaster_value }}</td>
+            <tr>
+        </table>
+        <table>
+            <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
+            <tr>
+                <td>Does your residence carry a mortgage?</td>
+                <td>{{ form.mortgage }}</td>
+            </tr>
+            <tr>
+                <td>Have you owned your home</td>
+                <td>{{ form.owned_less_than_30_years }}</td>
+            </tr>
+        </table>
+    <h2>Disaster Damage Information</h2>
+        <table id="damageinfo", style="width: 90%">
+            <tr><td>Type of Disaster:</td></tr>
+            <tr><td>{{ form.type_of_disaster }}</td></tr>
+            <tr>
+                <td>Approximate date of the disaster:</td>
+                <td>{{ form.date_of_disaster }}</td>
+            </tr>
+        </table>
+        <table id="waterdamage", style="width: 85%">
+            <td><h5>Check the box if the statement is true:</h5></td>
+            <tr><td>Is there water damage in your home?</td><td>{{ form.water_damage }}</td></tr>
+            <tr><td>Do you have a mobile home?</td><td>{{ form.water_mobilehome }}</td></tr>
+            <tr><td>Is water level less than 6 inches deep on the floor?</td><td>{{ form.water_mobilehome_minor }}</td></tr>
+            <tr><td>Do you have plywood flooring in your mobile home?</td><td>{{ form.water_mobilehome_major_plywood}}</td></tr>
+            <tr><td>Is water between 6 inches to 2 feet deep on the plywood floor?</td><td>{{ form.water_mobilehome_major_plywood_yes }}</td></tr>
+            <tr><td>Is water between 1 inch to 2 feet deep on your nonplywood floor?</td><td>{{ form.water_mobilehome_major_nonplywood }}</td></tr>
+            <tr><td>Is water greater than 2 feet deep on your floor?</td><td>{{ form.water_mobilehome_destroyed }}</td></tr>
+            <tr><td>Is water between 2 and 3 inches on your first floor?</td><td>{{ form.water_conventionalhome_minor }}</td></tr>
+            <tr><td>Is water between 3 inches and 5 feet on your first floor??</td><td>{{ form.water_conventionalhome_major }}</td></tr>
+            <tr><td>Is water greater than 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_destroyed }}</td></tr>
+            <tr><td>Is there more than 1 foot of sewage in your home?</td><td>{{ form.sewage }}</td></tr>
+
+            <tr><td>Are there broken windows?</td><td>{{ form.minor10_0 }}</td></tr>
+            <tr><td>Is there damage to landscaping?</td><td>{{ form.minor10_1 }}</td></tr>
+            <tr><td>Is more than 50% of your home damaged?</td><td>{{ form.minor10_2 }}</td></tr>
+        </table>
+
+        <table id="major", style="width:85%">
+            <tr><td>If you have a chimney, is it no longer functional?</td><td>{{ form.major20_0 }}</td></tr>
+            <tr><td>If you have a carpet on the first floor, is the majority of it soaked?</td><td>{{ form.major20_1 }}</td></tr>
+            <tr><td>If you have a parking lot, it is damaged?</td><td>{{ form.major20_2 }}</td></tr>
+
+            <tr><td>Is there damage from smoke?</td><td>{{ form.major30_0 }}</td></tr>
+            <tr><td>Is the fire escape inoperable?</td><td>{{ form.major30_1 }}</td></tr>
+            <tr><td>Are roof tiles missing?</td><td>{{ form.major30_2 }}</td></tr>
+            <tr><td>Are your vehicles damaged?</td><td>{{ form.major30_3 }}</td></tr>
+
+            <tr><td>Is there minor damage to interior flooring?</td><td>{{ form.major40_0 }}</td></tr>
+            <tr><td>Is there minor damage to exterior walling?</td><td>{{ form.major40_1 }}</td></tr>
+            <tr><td>Are there fallen trees on your home?</td><td>{{ form.major40_2 }}</td></tr>
+
+            <tr><td>Is there at least one room that is destroyed?</td><td>{{ form.major50_0 }}</td></tr>
+            <tr><td>Are any exits blocked?</td><td>{{ form.major50_1 }}</td></tr>
+            <tr><td>Are any utilities damaged? (furnace, water heater, well, septic system, etc)</td><td>{{ form.major50_2 }}</td></tr>
+
+            <tr><td>Is the foundation of your home damaged?</td><td>{{ form.major60_0 }}</td></tr>
+            <tr><td>Is the insulation in your home damaged?</td><td>{{ form.major60_1 }}</td></tr>
+
+            <tr><td>Is the exterior frame of your home damaged?</td><td>{{ form.major74_0 }}</td></tr>
+            <tr><td>Is the roof off or collapsed?</td><td>{{ form.major74_1 }}</td></tr>
+            <tr><td>Are accessory outbuildings damaged?</td><td>{{ form.major74_2 }}</td></tr>
+        </table>
+
+        <table id="destroyed", style="width: 85%">
+            <tr><td>Is there flooding above the first floor?</td><td>{{ form.destroyed80_0 }}</td></tr>
+            <tr><td>Did your home move off its foundation?</td><td>{{ form.destroyed80_1 }}</td></tr>
+            <tr><td>Did any walls collapse?</td><td>{{ form.destroyed80_2 }}</td></tr>
+            <tr><td>Is your home permanently uninhabitable?</td><td>{{ form.destroyed80_3 }}</td></tr>
+            <tr><td>Does your home require demolition because it is in danger due to landslides, mudslides, sinkholes, beach erosion, etc?</td><td>{{ form.destroyed80_4 }}</td></tr>
+
+            <tr><td>Did your home come off the foundation?</td><td>{{ form.destroyed90_0 }}</td></tr>
+            <tr><td>Is the second floor of your home completely gone?</td><td>{{ form.destroyed90_1 }}</td></tr>
+
+            <tr><td>Is your home leveled above the foundation, and is the basement and foundation damaged?</td><td>{{ form.destroyed100_0 }}</td></tr>
+            <tr><td>Is there flooding above the eaves (edge of the roof)?</td><td>{{ form.destroyed100_1 }}</td></tr>
+        </table>
+    <input type="submit" value="Submit">
 </form>
+
+<style>
+#content1{
+    margin: 6% auto auto 30%;
+    width: 50%;
+}
+
+#personalinfo{
+}
+
+ul{
+    list-style: none;
+    font-style: normal;
+}
+
+.radio{
+    display: inline-block;
+}
+
+table, th, tr, td{
+    border: 20px solid white;
+}
+</style>
+
 <script type="text/javascript">
     function check_mortgage(){
         var text=$('#id_insured').find(":selected").text();
         var occupancy=$('#id_type_of_occupancy').find(":selected").text();
         if(occupancy!=='Own as primary residence'){
-            $('#id_mortgage').parent().hide();
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_mortgage').closest('tr').hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
         }
         if(text==='Yes'||text==='No'||text===''){
-            $('#id_mortgage').parent().hide();
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_mortgage').closest('tr').hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
         }else{
-            $('#id_mortgage').parent().show();
+            $('#id_mortgage').closest('tr').show();
             check_30_years();
         }
     }
@@ -29,53 +178,53 @@
         var insured=$('#id_insured').find(":selected").text();
         var occupancy=$('#id_type_of_occupancy').find(":selected").text();
         if(occupancy!=='Own as primary residence'){
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
         }
         if(insured!=='Unsure'){
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
         }
         if(text==='Yes'||text==='No'||text===''){
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
         }else{
-            $('#id_owned_less_than_30_years').parent().show();
+            $('#id_owned_less_than_30_years').closest('tr').show();
         }
     }
 
     // function check_residence(){
     //     var text=$('#id_type_of_residence').find(":selected").text();
     //      if(text==='Single Family'||text==='Multi-Family'){
-    //         $('[id^=id_manufactured]').parent().hide();
-    //         $('[id^=id_normal]').parent().show();
+    //         $('[id^=id_manufactured]').closest('tr').hide();
+    //         $('[id^=id_normal]').closest('tr').show();
     //      }else if(text==='Manufactured Housing Unit'){
-    //         $('[id^=id_manufactured]').parent().show();
-    //         $('[id^=id_normal]').parent().hide();
+    //         $('[id^=id_manufactured]').closest('tr').show();
+    //         $('[id^=id_normal]').closest('tr').hide();
     //      }else{
-    //         $('[id^=id_manufactured]').parent().hide();
-    //         $('[id^=id_normal]').parent().hide();
+    //         $('[id^=id_manufactured]').closest('tr').hide();
+    //         $('[id^=id_normal]').closest('tr').hide();
     //      }
     // }
 
     function hide_questions() {
-        $('[id^=id_water_mobilehome]').parent().hide();
-        $('[id^=id_water_conventionalhome]').parent().hide();
-        $('[id^=id_minor]').parent().hide();
-        $('[id^=id_major]').parent().hide();
-        $('[id^=id_destroyed]').parent().hide();
+        $('[id^=id_water_mobilehome]').closest('tr').hide();
+        $('[id^=id_water_conventionalhome]').closest('tr').hide();
+        $('[id^=id_minor]').closest('tr').hide();
+        $('[id^=id_major]').closest('tr').hide();
+        $('[id^=id_destroyed]').closest('tr').hide();
     }
 
-    $('[id^=id_]').change(function () {
+    /*$('[id^=id_]').change(function () {
         check_waterdamage();
         check_sewage();
         check_minor();
-    }
+    });*/
 
     function check_waterdamage() {
         var water=$('#id_waterdamage').find(":selected").text();
         if(water==='Yes'){
-            $('#id_water_mobilehome').parent().show();
+            $('#id_water_mobilehome').closest('tr').show();
             show_form_minor10();
         }else{
-            $('#id_water_mobilehome').parent().hide();
+            $('#id_water_mobilehome').closest('tr').hide();
         }
     }
 
@@ -112,9 +261,9 @@
         var major74_2 = $('#id_major74_2').find(":selected").text();
         
         if(water_mobilehome_major_plywood_yes + water_mobilehome_major_nonplywood + water_conventionalhome_major + major20_0 + major20_1 + major20_2 + major20_3 + major30_0 + major30_1 + major30_2 + major30_3 + major40_0 + major40_1 + major40_2 + major50_0 + major50_1 + major50_2 + major60_0 + major60_1 + major60_2 + major74_0 + major74_1 + major74_2 >= 6) {
-            $('[id^=id_destroyed]').parent().show();
+            $('[id^=id_destroyed]').closest('tr').show();
         } else {
-            $('[id^=id_destroyed]').parent().hide();
+            $('[id^=id_destroyed]').closest('tr').hide();
         }
     }
 
@@ -126,16 +275,16 @@
     function show_form_minor10() {
         var water_mobilehome=$('#id_water_mobilehome').find(":selected").text();
         if(water_mobilehome==='Yes'){
-            $('#id_water_mobilehome_minor').parent().show();
+            $('#id_water_mobilehome_minor').closest('tr').show();
             var water_mobilehome_minor=$('#id_water_mobilehome_minor]').find(":selected").text();
         }else{
             show_form_minor10();
-            $('#id_water_mobilehome').parent().hide();
-            $('#id_water_conventionalhome_minor').parent().show();
+            $('#id_water_mobilehome').closest('tr').hide();
+            $('#id_water_conventionalhome_minor').closest('tr').show();
             var water_conventionalhome_minor = $('#id_water_conventionalhome_minor').find(":selected").text();
         }
-        $('#id_sewage').parent().show();
-        $('[id^=id_minor10]').parent().show();
+        $('#id_sewage').closest('tr').show();
+        $('[id^=id_minor10]').closest('tr').show();
         var sewage = $('#id_sewage').find(":selected").text();
         var minor10_0 = $('#id_minor10_0').find(":selected").text();
         var minor10_1 = $('#id_minor10_1').find(":selected").text();
@@ -149,13 +298,13 @@
         if(('water_mobilehome_minor').is(":visible")){
             var water_mobilehome_minor = $('#id_water_mobilehome_minor').find(":selected").text();
             if(water_mobilehome_minor==='Yes'){
-                $('#id_water_mobilehome_major_plywood').parent().show();
+                $('#id_water_mobilehome_major_plywood').closest('tr').show();
                 var water_mobilehome_major_plywood = $('#id_water_mobilehome_major_plywood').find(":selected").text();
                 if(water_mobilehome_major_plywood==='Yes'){
-                    $('#id_water_mobilehome_major_plywood_yes').parent().show();
+                    $('#id_water_mobilehome_major_plywood_yes').closest('tr').show();
                     var water_mobilehome_major_plywood_yes = $('#id_water_mobilehome_major_plywood_yes').find(":selected").text();
                 }else{
-                    $('#id_water_mobilehome_major_nonplywood').parent().show();
+                    $('#id_water_mobilehome_major_nonplywood').closest('tr').show();
                     var water_mobilehome_major_nonplywood = $('#id_water_mobilehome_major_nonplywood').find(":selected").text();
                 }
             }
@@ -163,11 +312,11 @@
         if(('water_conventionalhome_minor').is(":visible")){
             var water_conventionalhome_minor = $('#id_water_conventionalhome_minor').find(":selected").text();
             if(water_conventionalhome_minor==='Yes'){
-                $('#id_water_conventionalhome_major').parent().show();
+                $('#id_water_conventionalhome_major').closest('tr').show();
                 var water_conventionalhome_major = $('#id_water_conventionalhome_major').find(":selected").text();
             }
         }
-        $('[id^=id_major]').parent().show();
+        $('[id^=id_major]').closest('tr').show();
 
         var major20_0 = $('#id_major20_0').find(":selected").text();
         var major20_1 = $('#id_major20_1').find(":selected").text();
@@ -201,7 +350,7 @@
     }
 
     // function show_form_major30() {
-    //     $('[id^=id_major30]').parent().show();
+    //     $('[id^=id_major30]').closest('tr').show();
     //     var major30_0 = $('#id_major30_0').find(":selected").text();
     //     var major30_1 = $('#id_major30_1').find(":selected").text();
     //     var major30_2 = $('#id_major30_2').find(":selected").text();
@@ -212,7 +361,7 @@
     // }
 
     // function show_form_major40() {
-    //     $('[id^=id_major40]').parent().show();
+    //     $('[id^=id_major40]').closest('tr').show();
     //     var major40_0 = $('#id_major40_0').find(":selected").text();
     //     var major40_1 = $('#id_major40_1').find(":selected").text();
     //     var major40_2 = $('#id_major40_2').find(":selected").text();
@@ -222,7 +371,7 @@
     // }
 
     // function show_form_major50() {
-    //     $('[id^=id_major50]').parent().show();
+    //     $('[id^=id_major50]').closest('tr').show();
     //     var major50_0 = $('#id_major50_0').find(":selected").text();
     //     var major50_1 = $('#id_major50_1').find(":selected").text();
     //     var major50_2 = $('#id_major50_2').find(":selected").text();
@@ -232,7 +381,7 @@
     // }
 
     // function show_form_major60() {
-    //     $('[id^=id_major60]').parent().show();
+    //     $('[id^=id_major60]').closest('tr').show();
     //     var major60_0 = $('#id_major60_0').find(":selected").text();
     //     var major60_1 = $('#id_major60_1').find(":selected").text();
     //     var major60_2 = $('#id_major60_2').find(":selected").text();
@@ -242,7 +391,7 @@
     // }
 
     // function show_form_major74() {
-    //     $('[id^=id_major70]').parent().show();
+    //     $('[id^=id_major70]').closest('tr').show();
     //     var major74_0 = $('#id_major74_0').find(":selected").text();
     //     var major74_1 = $('#id_major74_1').find(":selected").text();
     //     var major74_2 = $('#id_major74_2').find(":selected").text();
@@ -256,17 +405,17 @@
             var water_mobilehome_major_plywood_yes = ('#id_water_mobilehome_major_plywood_yes').find(":selected").text();
             var water_mobilehome_major_nonplywood = ('#id_water_mobilehome_major_nonplywood').find(":selected").text();
             if(water_mobilehome_major_plywood_yes==='Yes' || water_mobilehome_major_nonplywood==='Yes'){
-                $('#id_water_mobilehome_destroyed').parent().show();
+                $('#id_water_mobilehome_destroyed').closest('tr').show();
             }
         }
         if(('#id_water_conventionalhome_major').is(":visible")){
             var water_conventionalhome_major = ('#id_water_conventionalhome_major').find(":selected").text();
             if(water_conventionalhome_major==='Yes'){
-                $('#id_water_conventionalhome_destroyed').parent().show();
+                $('#id_water_conventionalhome_destroyed').closest('tr').show();
             }
         }
 
-        $('[id^=id_destroyed]').parent().show();
+        $('[id^=id_destroyed]').closest('tr').show();
 
         var destroyed80_0 = $('#id_destroyed80_0').find(":selected").text();
         var destroyed80_1 = $('#id_destroyed80_1').find(":selected").text();
@@ -282,7 +431,7 @@
     }
 
     // function show_form_destroyed90() {
-    //     $('[id^=id_destroyed90]').parent().show();
+    //     $('[id^=id_destroyed90]').closest('tr').show();
     //     var destroyed90_0 = $('#id_destroyed90_0').find(":selected").text();
     //     var destroyed90_1 = $('#id_destroyed90_1').find(":selected").text();
     //     if(destroyed90_0==='Yes' || destroyed90_1==='Yes') {
@@ -291,25 +440,25 @@
     // }
 
     // function show_form_destroyed100() {
-    //     $('[id^=id_destroyed100]').parent().show();
+    //     $('[id^=id_destroyed100]').closest('tr').show();
     //     var destroyed100_0 = $('#id_destroyed100_0').find(":selected").text();
     //     var destroyed100_1 = $('#id_destroyed100_1').find(":selected").text(); 
     // }
 
-    $( document ).ready(function() {
+    /*$( document ).ready(function() {
             console.log("ready");
             check_mortgage()
             check_30_years()
             hide_questions()
             check_waterdamage()
-    });
+    });*/
      $('#id_type_of_occupancy').change(function () {
         var text=$( this ).find(":selected").text();
          if(text==='Own as primary residence'){
              check_mortgage();
          }else{
-            $('#id_mortgage').parent().hide();
-            $('#id_owned_less_than_30_years').parent().hide();
+            $('#id_mortgage').closest('tr').hide();
+            $('#id_owned_less_than_30_years').closest('tr').hide();
          }
      })
     $('#id_insured').change(function () {
@@ -323,11 +472,5 @@
     })
 </script>
 </div>
-<style>
-#content1{
-    margin: 6% auto auto auto;
-    width: 40%;
-}
-</style>
 {% endblock %}
 </html>

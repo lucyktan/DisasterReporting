@@ -109,115 +109,115 @@ def calculate_individual_damage_estimate(report):
             cur_sum+=coefficient.coefficient
         elif should_add_coefficient(coefficient.variable,'typhoon',report,'type_of_disaster','Typhoon'):
             cur_sum+=coefficient.coefficient
-        elif should_add_coefficient(coefficient.variable,'sewage_1',report,'sewage',1):
+        elif should_add_coefficient(coefficient.variable,'sewage_1',report,'sewage', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'minor10_1_1',report,'minor10_1',1):
+        elif should_add_coefficient(coefficient.variable,'minor10_1_1',report,'minor10_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'minor10_2_1',report,'minor10_2',1):
+        elif should_add_coefficient(coefficient.variable,'minor10_2_1',report,'minor10_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major20_0_1',report,'major20_0',1):
+        elif should_add_coefficient(coefficient.variable,'major20_0_1',report,'major20_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major20_1_1',report,'major20_1',1):
+        elif should_add_coefficient(coefficient.variable,'major20_1_1',report,'major20_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major20_2_1',report,'major20_2',1):
+        elif should_add_coefficient(coefficient.variable,'major20_2_1',report,'major20_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major30_0_1',report,'major30_0',1):
+        elif should_add_coefficient(coefficient.variable,'major30_0_1',report,'major30_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major30_1_1',report,'major30_1',1):
+        elif should_add_coefficient(coefficient.variable,'major30_1_1',report,'major30_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major30_2_1',report,'major30_2',1):
+        elif should_add_coefficient(coefficient.variable,'major30_2_1',report,'major30_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major30_3_1',report,'major30_3',1):
+        elif should_add_coefficient(coefficient.variable,'major30_3_1',report,'major30_3', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major40_0_1',report,'major40_0',1):
+        elif should_add_coefficient(coefficient.variable,'major40_0_1',report,'major40_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major40_1_1',report,'major40_1',1):
+        elif should_add_coefficient(coefficient.variable,'major40_1_1',report,'major40_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major40_2_1',report,'major40_2',1):
+        elif should_add_coefficient(coefficient.variable,'major40_2_1',report,'major40_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major50_0_1',report,'major50_0',1):
+        elif should_add_coefficient(coefficient.variable,'major50_0_1',report,'major50_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major50_1_1',report,'major50_1',1):
+        elif should_add_coefficient(coefficient.variable,'major50_1_1',report,'major50_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major50_2_1',report,'major50_2',1):
+        elif should_add_coefficient(coefficient.variable,'major50_2_1',report,'major50_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major60_0_1',report,'major60_0',1):
+        elif should_add_coefficient(coefficient.variable,'major60_0_1',report,'major60_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major60_1_1',report,'major60_1',1):
+        elif should_add_coefficient(coefficient.variable,'major60_1_1',report,'major60_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major74_0_1',report,'major74_0',1):
+        elif should_add_coefficient(coefficient.variable,'major74_0_1',report,'major74_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major74_1_1',report,'major74_1',1):
+        elif should_add_coefficient(coefficient.variable,'major74_1_1',report,'major74_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'major74_2_1',report,'major74_2',1):
+        elif should_add_coefficient(coefficient.variable,'major74_2_1',report,'major74_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed80_0_1',report,'destroyed80_0',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed80_0_1',report,'destroyed80_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed80_1_1',report,'destroyed80_1',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed80_1_1',report,'destroyed80_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed80_2_1',report,'destroyed80_2',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed80_2_1',report,'destroyed80_2', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed80_3_1',report,'destroyed80_3',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed80_3_1',report,'destroyed80_3', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed80_4_1',report,'destroyed80_4',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed80_4_1',report,'destroyed80_4', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed90_0_1',report,'destroyed90_0',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed90_0_1',report,'destroyed90_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed90_1_1',report,'destroyed90_1',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed90_1_1',report,'destroyed90_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed100_0_1',report,'destroyed100_0',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed100_0_1',report,'destroyed100_0', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'destroyed100_1_1',report,'destroyed100_1',1):
+        elif should_add_coefficient(coefficient.variable,'destroyed100_1_1',report,'destroyed100_1', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_damage_1',report,'water_damage',1):
+        elif should_add_coefficient(coefficient.variable,'water_damage_1',report,'water_damage', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_mobilehome_1',report,'water_mobilehome',1):
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_1',report,'water_mobilehome', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_plywood_1',report,'water_mobilehome_major_plywood',1):
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_plywood_1',report,'water_mobilehome_major_plywood', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_nonplyw_1',report,'water_mobilehome_major_nonplywood',1):
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_major_nonplyw_1',report,'water_mobilehome_major_nonplywood', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_mobilehome_destroyed_1',report,'water_mobilehome_destroyed',1):
+        elif should_add_coefficient(coefficient.variable,'water_mobilehome_destroyed_1',report,'water_mobilehome_destroyed', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_major_1',report,'water_conventionalhome_major',1):
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_major_1',report,'water_conventionalhome_major', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
-        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_destroy_1',report,'water_conventionalhome_destroyed',1):
+        elif should_add_coefficient(coefficient.variable,'water_conventionalhome_destroy_1',report,'water_conventionalhome_destroyed', True):
             cur_sum+=coefficient.coefficient
             has_damage=True
         elif coefficient.variable == 'predisaster_value':
@@ -360,6 +360,9 @@ def edit_form(request,formid):
 
 def make_form(old_report):
     data=vars(old_report)
+    for key,val in data.iteritems():
+        if val == 0 and (key != 'predisaster_value' or key != 'estimated_damage' or key != 'perDam'):
+            data[key] = False
     return DisasterForm(initial=data)
 
 def update_report(new_report):
