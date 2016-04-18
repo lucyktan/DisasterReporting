@@ -44,7 +44,7 @@
     function check_zoom() {
         zoomLevel = map.getZoom();
         console.log(zoomLevel);
-        if (zoomLevel >= 9) {
+        if (zoomLevel >= 6) {
             if($(this).text()=='Show map of damages'){
                 layer_d.setMap(null);
                 layer_nr.setMap(map);
@@ -153,6 +153,7 @@
             $('#map').show();
             $('#toggle').show();
             $('#estimate').hide();
+            check_zoom();
         }else{
             if($('#toggle').text()=='Show map of report frequencies'){
                 $(this).text('Show map of damages');
@@ -175,6 +176,7 @@
             layer_d.setMap(map);
             $(this).text('Show map of report frequencies');
         }
+        check_zoom();
     });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ map_data.api_key }}&callback=initMap"

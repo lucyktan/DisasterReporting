@@ -587,7 +587,8 @@ def show_results(request,id=None):
     map_data=MapData()
     map_data.latitude = 36.2062156
     map_data.longitude = -113.750551
-    map_data.zoom = 4
+    map_data.zoom = 6
+    map_data.api_key=key
     report = None
     if id is not None:
         report=Report.objects.get(id=id)
@@ -596,15 +597,25 @@ def show_results(request,id=None):
             map_data.longitude = report.longitude
             map_data.zoom = 11
     if report is None:
-        report=Report.objects.all().last()
-
+        try:
+            report=Report.objects.all().last()
+        except:
+            labels=[]
+            map_labels=[]
+            lats=[]
+            lngs=[]
+            map_data.locations=zip(lats,lngs,map_labels,labels)
+            map_data.zip_code_damages={'minor':[],'major':[],'destroyed':[]}
+            map_data.zip_code_num_reports={'few':[],'several':[],'many':[]}
+            return render(request, 'results.html',{'map_data': map_data,'estimate':'0.00','total':'','show_estimate':False})
+        map_data.latitude = report.latitude
+        map_data.longitude = report.longitude
     show_estimate=False
     if request.user.is_authenticated() and request.user.username == report.username:
         show_estimate=True
     map_data.locations=get_locations(report.fema_disaster_number)
     map_data.zip_code_damages=get_zip_code_damages(report.fema_disaster_number)
     map_data.zip_code_num_reports=get_zip_code_num_reports(report.fema_disaster_number)
-    map_data.api_key=key
     total_estimate = total_disaster_estimate(report)
     return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate,'show_estimate':show_estimate})
 
