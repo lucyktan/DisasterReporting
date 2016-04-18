@@ -43,7 +43,7 @@ def get_form(request):
                 report=make_report(form)
                 report.username=request.user.username
             except:
-                return render(request, 'form.html', {'form': form,'address_invalid':True})
+                return render(request, 'form.html', {'form': form,'address_invalid':True,'address_duplicate':False})
 
             if unique_address(report) == 1:
                 report.predisaster_value = estimate_home_value(report)
@@ -57,10 +57,12 @@ def get_form(request):
                 form_category=FormCategory(form_id_id=report.id,category_id_id=category_id)
                 form_category.save()
                 return redirect('results',report.id)
+            else:
+                return render(request, 'form.html', {'form': form,'address_invalid':False,'address_duplicate':True})
     else:
         form = DisasterForm()
 
-    return render(request, 'form.html', {'form': form,'address_invalid':False})
+    return render(request, 'form.html', {'form': form,'address_invalid':False,'address_duplicate':False})
 
 def unique_address(report):
     inpDate = report.date_of_disaster
@@ -257,7 +259,7 @@ def total_disaster_estimate(report):
             estl = 5425.08*30000
             estu = 5425.08*60000
             return "Estimated total fema payout between %d and %d" % (estl,estu)
-        elif rand > probBig & rand <= probBig + probMed:
+        elif rand > probBig and rand <= probBig + probMed:
             ## based on  damage estimate for hurricanes
             estl = 5425.08*10000
             estu = 5425.08*30000
@@ -340,7 +342,7 @@ def edit_form(request,formid):
                 report=make_report(form)
                 report.username=request.user.username
             except:
-                return render(request, 'form.html', {'form': form,'address_invalid':True})
+                return render(request, 'form.html', {'form': form,'address_invalid':True,'address_duplicate':False})
 
             report.predisaster_value = estimate_home_value(report)
             percent_damage,estimated_damage=calculate_individual_damage_estimate(report)
@@ -356,7 +358,7 @@ def edit_form(request,formid):
 
     else:
         form=make_form(old_report)
-        return render(request, 'form.html', {'form': form,'address_invalid':False})
+        return render(request, 'form.html', {'form': form,'address_invalid':False,'address_duplicate':False})
 
 def make_form(old_report):
     data=vars(old_report)

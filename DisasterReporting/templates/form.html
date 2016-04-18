@@ -3,7 +3,18 @@
 <!DOCTYPE html>
 {% block body %}
 <div id="content1">
-<form method="post">
+{% if address_invalid %}
+<p class="address_error">The address you entered could not be found. Please check your spelling and try again.</p>
+{% endif %}
+{% if address_duplicate %}
+<p class="address_error">The address you entered has already been used for this disaster. Please check your spelling and try again. If you have used this address in the last 30 days, you can <a href="/formhistory/">edit</a> the form.</p>
+{% endif %}
+{% for field, errors in form.errors.items %}
+    {% for error in errors %}
+        <p class="address_error">There was an error with the {{ field }} question: {{ error }}</p>
+    {% endfor %}
+{% endfor %}
+    <form method="post">
     {% csrf_token %}
     <!-- {{ form.as_p }} -->
     {{ form.non_field_errors }}
