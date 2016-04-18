@@ -221,12 +221,12 @@ def calculate_individual_damage_estimate(report):
             cur_sum+=coefficient.coefficient
             has_damage=True
         elif coefficient.variable == 'predisaster_value':
-            cur_sum+=coefficient.coefficient * report.predisaster_value
+            cur_sum+=coefficient.coefficient * decimal.Decimal(report.predisaster_value)
         elif coefficient.variable == 'Constant':
             cur_sum+=coefficient.coefficient
 
     percent_damage = math.exp(cur_sum)/(1+math.exp(cur_sum)) if has_damage else 0
-    estimated_damage = decimal.Decimal(percent_damage) * report.predisaster_value
+    estimated_damage = decimal.Decimal(percent_damage) * decimal.Decimal(report.predisaster_value)
     if estimated_damage > 31900: #max FEMA grant amount
         estimated_damage = 31900
     return percent_damage,estimated_damage
