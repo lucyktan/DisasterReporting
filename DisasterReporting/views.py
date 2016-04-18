@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, render 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login as django_login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from DisasterReporting.forms import CreateUserForm, LoginForm
@@ -18,7 +18,11 @@ def createaccount(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.create_new_account(request)
-            return HttpResponseRedirect('/login/')
+            new_user = authenticate(username=form.cleaned_data['email'],
+                                    password=form.cleaned_data['password'],
+                                    )
+            django_login(request, new_user)
+            return HttpResponseRedirect('/home/')
     else:
         form = CreateUserForm()
     return render(request, 'Accounts/createaccount.html', {'form': form})
