@@ -21,16 +21,18 @@
 <div class="menu col-md-1" style="width: 20%">
     <br><br><br>
 <ul class="nav nav-pills nav-stacked">
-    <li class="active"><a data-toggle="pill" href="#personal">Personal Information</a></li>
-    <li><a data-toggle="pill" href="/form/#property">Property Information</a></li>
-    <li><a data-toggle="pill" href="/form/#damage1">Damage Information I</a></li>
-    <li><a data-toggle="pill" href="/form/#damage2">Damage Information II</a></li>
+    <li class="active"><a id="personalnav" data-toggle="pill" href="#personal">Personal Information</a></li>
+    <li><a id="propertynav" data-toggle="pill" href="/form/#property">Property Information</a></li>
+    <li><a id="damage1nav" data-toggle="pill" href="/form/#damage1">Damage Information I</a></li>
+    <li><a id="damage2nav" data-toggle="pill" href="/form/#damage2">Damage Information II</a></li>
+    <li><a id="damage3nav" data-toggle="pill" href="/form/#damage3">Damage Information III</a></li>
+    <li><a id="damage4nav" data-toggle="pill" href="/form/#damage4">Damage Information IV</a></li>
 </ul>
 </div>
 <div class="tab-content col-md-3" style="width:70%">
     <div id="personal" class="tab-pane fade in active">
         <h3>Personal Information</h3>
-        <table id="personalinfo", style="width: 85%">
+        <table id="personalinfo" style="width: 85%">
             <tr>
                 <td>First name:</td>    
                 <td>{{ form.first_name }}</td>
@@ -60,12 +62,12 @@
                 <td>{{ form.zipcode }}</td>
             </tr>
         </table>
-        <a href="/form/#property"><button type="button" class="btn btn-default" style="display:block; margin: 10% 70% auto 30%">Next</button></a>
+        <button type="button" class="btn btn-default next-button" data-nav="propertynav" style="display:block; margin: 10% 70% auto 30%">Next</button>
     </div>
 
     <div id="property" class="tab-pane fade">
     <h3>Property Information</h3>
-        <table id="propertyinfo", style="width: 85%">
+        <table id="propertyinfo" style="width: 85%">
             <tr><td>Type of Residence:</td></tr>
             <tr><td>{{ form.type_of_residence }}</td></tr>
             <tr><td>Type of Occupancy:</td></tr>
@@ -80,7 +82,8 @@
             <tr>
         </table>
         <table>
-            <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
+            <tr>
+            <td><h5><div id="optional_check">Check the box if your answer is yes to the following questions:</div></h5></td></tr>
             <tr>
                 <td>Does your residence carry a mortgage?</td>
                 <td>{{ form.mortgage }}</td>
@@ -90,11 +93,13 @@
                 <td>{{ form.owned_less_than_30_years }}</td>
             </tr>
         </table>
+        <button type="button" class="btn btn-default previous-button" data-nav="personalnav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage1nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
     </div>
 
     <div id="damage1" class="tab-pane fade">
     <h3>Disaster Damage Information I</h3>
-        <table id="damageinfo", style="width: 85%">
+        <table id="damageinfo" style="width: 85%">
             <tr><td>Type of Disaster:</td></tr>
             <tr><td>{{ form.type_of_disaster }}</td></tr>
             <tr>
@@ -102,7 +107,7 @@
                 <td>{{ form.date_of_disaster }}</td>
             </tr>
         </table>
-        <table id="waterdamage", style="width: 85%">
+        <table id="waterdamage" style="width: 85%">
             <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
             <tr><td>Is there water damage in your home?</td><td>{{ form.water_damage }}</td></tr>
             <tr><td>Do you have a mobile home?</td><td>{{ form.water_mobilehome }}</td></tr>
@@ -114,25 +119,29 @@
             <tr><td>Is water between 2 and 3 inches on your first floor?</td><td>{{ form.water_conventionalhome_minor }}</td></tr>
             <tr><td>Is water between 3 inches and 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_major }}</td></tr>
             <tr><td>Is water greater than 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_destroyed }}</td></tr>
-            </table>
+        </table>
+        <button type="button" class="btn btn-default previous-button" data-nav="propertynav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage2nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
     </div>
 
     <div id="damage2" class="tab-pane fade">
         <h3>Disaster Damage Information II</h3><br>
-        <h4>Minor Damage</h4>
-        <table id="minordamage", style="width: 85%">
+        <!--<h4>Minor Damage</h4>-->
+        <table id="minordamage" style="width: 85%">
             <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
             <tr><td>Is there more than 1 foot of sewage in your home?</td><td>{{ form.sewage }}</td></tr>
             <tr><td>Are there broken windows?</td><td>{{ form.minor10_0 }}</td></tr>
             <tr><td>Is there damage to landscaping?</td><td>{{ form.minor10_1 }}</td></tr>
             <tr><td>Is more than 50% of your home damaged?</td><td>{{ form.minor10_2 }}</td></tr>
         </table>
+        <button type="button" class="btn btn-default previous-button" data-nav="damage1nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage3nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
     </div>
 
-    <div id="major" class="tab-pane fade">
-        <h3>Disaster Damage Information II</h3><br>
-        <h4>Major Damage</h4>
-        <table id="major", style="width:85%">
+    <div id="damage3" class="tab-pane fade">
+        <h3>Disaster Damage Information III</h3><br>
+        <!--<h4>Major Damage</h4>-->
+        <table id="major" style="width:85%">
             <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
             <tr><td>If you have a chimney, is it no longer functional?</td><td>{{ form.major20_0 }}</td></tr>
             <tr><td>If you have a carpet on the first floor, is the majority of it soaked?</td><td>{{ form.major20_1 }}</td></tr>
@@ -158,12 +167,14 @@
             <tr><td>Is the roof off or collapsed?</td><td>{{ form.major74_1 }}</td></tr>
             <tr><td>Are accessory outbuildings damaged?</td><td>{{ form.major74_2 }}</td></tr>
         </table>
+        <button type="button" class="btn btn-default previous-button" data-nav="damage2nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage4nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
     </div>
 
-    <div id="destroyed" class="tab-pane fade">
-        <h3>Disaster Damage Information II</h3><br>
-        <h4>Destroyed</h4>
-        <table id="destroyed", style="width: 85%">
+    <div id="damage4" class="tab-pane fade">
+        <h3>Disaster Damage Information IV</h3><br>
+        <!--<h4>Destroyed</h4>-->
+        <table id="destroyed" style="width: 85%">
             <td><h5>Check the box if your answer is yes to the following questions:</h5></td>
             <tr><td>Is there flooding above the first floor?</td><td>{{ form.destroyed80_0 }}</td></tr>
             <tr><td>Did your home move off its foundation?</td><td>{{ form.destroyed80_1 }}</td></tr>
@@ -177,6 +188,7 @@
             <tr><td>Is your home leveled above the foundation, and is the basement and foundation damaged?</td><td>{{ form.destroyed100_0 }}</td></tr>
             <tr><td>Is there flooding above the eaves (edge of the roof)?</td><td>{{ form.destroyed100_1 }}</td></tr>
         </table>
+        <button type="button" class="btn btn-default previous-button" data-nav="damage3nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
         <input type="submit" value="Submit">
     </div>  
 </div>
@@ -222,10 +234,10 @@
 #damage2{
     margin: auto auto 20% 15%;
 }
-#major{
+#damage3{
     margin: auto auto 20% 15%;
 }
-#destroyed{
+#damage4{
     margin: auto auto 20% 15%;
 }
 
@@ -247,18 +259,20 @@ table, th, tr, td{
     var table_index=$('table').index($('#id_sewage').closest('table'));
     var row_index=$('table:eq('+table_index+') tr').index($('#id_sewage').closest('tr'));
     function check_mortgage(){
-        var text=$('#id_insured').prop("checked");
-        var occupancy=$('#id_type_of_occupancy').prop("checked");
-        if(occupancy!=='Own as primary residence'){
+        var text=$('#id_insured').find(':selected').text();
+        var occupancy=$('#id_type_of_occupancy_0').prop('checked');
+        if(occupancy!==true){
             $('#id_mortgage').closest('tr').hide();
             $('#id_owned_less_than_30_years').closest('tr').hide();
-        }
-        if(text==='Yes'||text==='No'||text===''){
+            $('#optional_check').closest('tr').hide();
+        } else if(text==='Yes'||text==='No'||text===''){
             $('#id_mortgage').closest('tr').hide();
             $('#id_owned_less_than_30_years').closest('tr').hide();
+            $('#optional_check').closest('tr').hide();
         }else{
             $('#id_mortgage').closest('tr').show();
             $('#id_owned_less_than_30_years').closest('tr').show();
+            $('#optional_check').closest('tr').show();
         }
     }
 
@@ -349,13 +363,14 @@ table, th, tr, td{
         check_mortgage();
     });
 
-     $('#id_type_of_occupancy').change(function () {
-        var text=$( this ).prop("checked");
-         if(text==='Own as primary residence'){
+     $('[id^=id_type_of_occupancy_]').change(function () {
+        var text=$('#id_type_of_occupancy_0' ).prop("checked");
+         if(text===true){
              check_mortgage();
          }else{
             $('#id_mortgage').closest('tr').hide();
             $('#id_owned_less_than_30_years').closest('tr').hide();
+            $('#optional_check').closest('tr').hide();
          }
      });
 
@@ -392,9 +407,10 @@ table, th, tr, td{
             check_showing_questions();
         });
         hide_questions();
-        $('input[type="submit"]').hide();
+        //$('input[type="submit"]').hide();
         $('#id_mortgage').closest('tr').hide();
         $('#id_owned_less_than_30_years').closest('tr').hide();
+        $('#optional_check').closest('tr').hide();
         check_mortgage();
         check_water_damage();
     });
@@ -409,6 +425,18 @@ table, th, tr, td{
 
      $(document).ready(function(){
         $('.dropdown-toggle').dropdown()
+    });
+
+    $('.next-button').click(function () {
+        var nav=$(this).attr('data-nav');
+        $('#'+nav).click();
+        check_showing_questions();
+    });
+
+    $('.previous-button').click(function () {
+        var nav=$(this).attr('data-nav');
+        $('#'+nav).click();
+        check_showing_questions();
     });
 
 </script>
