@@ -21,7 +21,7 @@
  
 <!--Modified from Bootstrap-->
 <body>
-<nav class="navbar navbar-default">
+<nav class="fixed-nav-bar">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -57,6 +57,46 @@
 </html>
 
 <style>
+.fixed-nav-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background-color: #203470;
+}
+.navbar-brand{
+  color: #ffffff;
+}
+.navbar-brand:hover{
+  color: #ffffff;
+}
+.navbar-right > li:hover > a{
+  color: #ffffff;
+  background-color: #62709a;
+}
+.navbar-right > li > a{
+  color: #ffffff;
+}
+.navbar-right > li > a:hover{
+  color: #ffffff;
+}
+.dropdown-menu{
+  background: #203470;
+}
+.dropdown-toggle > li:hover > a{
+  color: #ffffff;
+  background-color: #62709a;
+}
+.dropdown-toggle > li > a{
+  color: #ffffff;
+}
+.dropdown-toggle > li > a:hover{
+  color: #ffffff;
+}
+.dropdown-menu > li > a{
+  color: #ffffff;
+}
 .content{
 	margin: 10px 30px 10px 30px;
 	border-style: hiddden;

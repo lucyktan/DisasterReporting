@@ -4,7 +4,12 @@
 {% block body %}
 
 <div id="content1">
-<table>
+    <h4 style="text-align: center; margin: 8% auto 0 auto">Your Submitted Reports</h4>
+<table id="history">
+    <col width="200">
+    <col width="200">
+    <col width="400">
+    <col width="200">
     <thead>
     <tr>
         <th>Date of disaster</th>
@@ -53,7 +58,12 @@
 
 #content1{
 	margin: 6% auto auto auto;
-
+}
+table{
+    margin: auto auto auto auto;
+}
+table, th, tr, td{
+    border: 50px solid white;
 }
 
 </style>
