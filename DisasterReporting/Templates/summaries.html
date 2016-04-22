@@ -3,10 +3,12 @@
 
 {% block body %}
 <div id="content1">
-    <ul class="nav nav-tabs">
+    <h4 style="text-align: center; margin: 2% auto auto auto">OpenDRS</h4>
+    <h5 style="text-align: center">Access our datasets of natural disaster damage reports</h5>
+    <ul class="nav nav-tabs" style="margin: 2% auto auto auto">
         <li class="active"><a data-toggle="tab" href="#home">All</a></li>
         {% for type in disaster_numbers_by_type %}
-            <li><a data-toggle="tab" href="#type-{{ forloop.counter0 }}">{{ type }}</a></li>
+            <li id="disastertab"><a data-toggle="tab" href="#type-{{ forloop.counter0 }}">{{ type }}</a></li>
         {% endfor %}
     </ul>
 <div class="tab-content">
@@ -41,6 +43,9 @@
         {% for type, value in disaster_numbers_by_type.iteritems %}
             <div id="type-{{ forloop.counter0 }}" class="tab-pane fade">
                 <table class="sortable">
+                    <col width="180">
+                    <col width="220">
+                    <col width="200">
                     <thead>
                         <tr>
                             <th>Disaster number <i class="fa fa-sort" aria-hidden="true"></i></th>
@@ -65,13 +70,15 @@
 </div>
 </div>
 <style>
+#disastertab a{
+    color: black;
+}
 table{
     margin: 30px auto auto auto;
 }
 table, tr, td, th{
     border: 10px solid white;
 }
-
 #content1{
 }
 th span{

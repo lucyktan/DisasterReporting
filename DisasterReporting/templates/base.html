@@ -1,27 +1,26 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js"></script>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-<!-- Optional theme -->
-<link href='https://fonts.googleapis.com/css?family=Belleza' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-<script type="text/javascript">
-    /*
-  SortTable
-  version 2
-  7th April 2007
+  <!-- Optional theme -->
+  <link href='https://fonts.googleapis.com/css?family=Belleza' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <script type="text/javascript">
+
+  /*
+  The following Javascript for sorting HTML tables utilized: 
+
+  SortTable version 2 
   Stuart Langridge, http://www.kryogenix.org/code/browser/sorttable/
-
-  Thanks to many, many people for contributions and suggestions.
   Licenced as X11: http://www.kryogenix.org/code/browser/licence.html
   This basically means: do what you want with it.
-*/
+  */
 
 
 var stIsIE = /*@cc_on!@*/false;
@@ -515,7 +514,6 @@ var forEach = function(object, block, context) {
 <body>
 <nav class="fixed-nav-bar navbar-static-top">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="/home">Disaster Reporting System</a>
     </div>
@@ -523,8 +521,9 @@ var forEach = function(object, block, context) {
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/form">Report Damage</a></li>
-        <li><a href="/summaries">Download Disaster Summaries</a></li>
+        <li><a href="/form">Get Estimate</a></li>
+        <li><a href="/results">Damage Map</a></li>
+        <li><a href="/summaries">OpenDRS</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account Settings<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
@@ -548,6 +547,7 @@ var forEach = function(object, block, context) {
 </body>
 </html>
 
+<!--The following CSS was written by our group-->
 <style>
 .fixed-nav-bar{
   position: fixed;
@@ -560,6 +560,7 @@ var forEach = function(object, block, context) {
 .navbar-brand{
   color: #ffffff;
   font-family: 'Belleza', sans-serif;
+  font-size: 1.7em;
 }
 .navbar-brand:hover{
   color: #ffffff;
@@ -570,6 +571,7 @@ var forEach = function(object, block, context) {
 }
 .navbar-right > li > a{
   color: #ffffff;
+  font-size: 0.95em;
 }
 .navbar-right > li > a:hover{
   color: #ffffff;

@@ -2,7 +2,35 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    {% if show_estimate %}
+    <div id="content1">
+    <h4 style="text-align: center; margin: 2% auto auto auto">Damage Map</h4>
+    <h5 style="text-align: center">View how natural disasters are affecting homes in the United States</h5>
+    <ul class="nav nav-tabs" style="margin: 2% auto auto auto">
+        <li class="active"><a data-toggle="tab" href="#map">Map of Damage Severity</a></li>
+        <li><a data-toggle="tab" href="#frequency">Map of Damage Frequency</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div id="map" class="tab-pane fade in active">
+        {% for type,zips in map_data.zip_code_damages.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+        {% endfor %}
+        </div> 
+
+        <div id="frequency" class="tab-pane fade">
+        {% for type,zips in map_data.zip_code_num_reports.iteritems %}
+        {% for zip in zips %}
+            <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
+        {% endfor %}
+        {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- {% if show_estimate %}
     <button id="toggle_show_map" type="button">Show damage estimate</button>
     <div id="estimate">
         <p>The estimated grant that FEMA would provide you if a presidential disaster declaration is made for this event is ${{ estimate }}.</p>
@@ -22,7 +50,17 @@
             <div id="zip_{{ zip }}" class="zip_{{ type }}"></div>
         {% endfor %}
 
-    {% endfor %}
+    </div>
+    {% endfor %} -->
+
+    <style>
+    #severity{
+        margin-top: 10px;
+    }
+    #frequency{
+        margin-top: 10px;
+    }
+    </style>
 
     <script type="text/javascript">
 
