@@ -5,7 +5,7 @@
     <div id="content1">
     <h4 style="text-align: center; margin: 2% auto auto auto">Damage Map</h4>
     <h5 style="text-align: center">View how natural disasters are affecting homes in the United States</h5>
-    <ul class="nav nav-tabs" style="margin: 2% auto auto auto">
+    <ul class="nav nav-tabs" style="margin: 2% auto auto auto; display: inline-block; text-align: center">
         <li class="active"><a data-toggle="tab" href="#severity" class="tab-click">Map of Damage Severity</a></li>
         <li><a data-toggle="tab" href="#frequency" class="tab-click">Map of Damage Frequency</a></li>
     </ul>
@@ -30,11 +30,20 @@
     </div>
     </div>
     <style>
-    #severity{
-        margin-top: 10px;
+    #map{
+        margin-top: 15px;
     }
-    #frequency{
-        margin-top: 10px;
+    .nav-tabs{
+        display: inline;
+        position: relative;
+        left: 34%;
+        text-align: center;
+    }
+    .nav-tabs li a{
+        color: #bfbfbf;
+    }
+    .nav-tabs li a:active{
+        color: black;
     }
     </style>
 

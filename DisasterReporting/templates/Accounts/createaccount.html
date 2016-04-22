@@ -4,6 +4,7 @@
 {% block body %}
 
 <div id="content1">
+	<h3 style="padding-bottom: 14px">Register</h3>
 	<form action="/createaccount/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -14,8 +15,8 @@
 <style>
 
 #content1{
-	margin: 6% auto auto auto;
-	width: 18%;
+	margin: 5% auto auto auto;
+	width: 16%;
 }
 
 </style>

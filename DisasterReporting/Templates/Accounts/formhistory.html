@@ -18,7 +18,7 @@
         <th>Address <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Estimated damage <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Estimated total damage for disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
-        <th>Edit link <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Edit form</th>
     </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@
                 {{ report.total_damage }}
             </td>
             <td>
-                <a href="/form/{{ report.id }}">Link</a>
+                <a href="/form/{{ report.id }}">Edit</a>
             </td>
         </tr>
 	{% endfor %}

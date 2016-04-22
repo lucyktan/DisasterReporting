@@ -3,6 +3,7 @@
 
 {% block body %}
 <div id="content1">
+	<h3 style="padding-bottom: 14px">Login</h3>
 	<form action="/login/" method="post">
     {% csrf_token %}
     {{ form.as_p }}

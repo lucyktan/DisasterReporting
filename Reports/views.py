@@ -258,34 +258,34 @@ def total_disaster_estimate(report):
             ## based on  damage estimate for hurricanes
             estl = 5425.08*30000
             estu = 5425.08*60000
-            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+            return "Between $%d and $%d" % (estl,estu)
         elif rand > probBig and rand <= probBig + probMed:
             ## based on  damage estimate for hurricanes
             estl = 5425.08*10000
             estu = 5425.08*30000
-            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+            return "Between $%d and $%d" % (estl,estu)
         else:
             ## based on  damage estimate for hurricanes
             estl = 5425.08*100
             estu = 5425.08*10000
-            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+            return "Between $%d and $%d" % (estl,estu)
 
     elif report.type_of_disaster == "Tornado":
         ## based on  damage estimate for tornados
         estl = 4410.958*380
         estu = 4410.958*1500
-        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+        return "Between $%d and $%d" % (estl,estu)
 
     elif report.type_of_disaster == 'Earthquake':
         ## based on  damage estimate for earthquakes
         estl = 3305.191*3000
         estu = 3305.191*6000
-        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+        return "Between $%d and $%d" % (estl,estu)
     else:
         ## based on  damage estimate for floods
         estl = 3564.974*100
         estu = 3564.974*6000
-        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
+        return "Between $%d and $%d" % (estl,estu)
 
 #sets disaster number
 def disaster_number(report):
