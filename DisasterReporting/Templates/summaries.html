@@ -6,11 +6,13 @@
 <div id="content1">
 	<form method="post">
     {% csrf_token %}
-    <select name="disaster_number">
+    <tbody>
         {% for disaster_number in disaster_numbers %}
-            <option value="{{ disaster_number }}">{{ disaster_number }}</option>
+        <tr>
+            <td>{{ disaster_number }}</td>
+
         {% endfor %}
-    </select>
+    </tbody>
     <input type="submit" value="Submit" style="text-align: center"/>
 </form>
 </div>
