@@ -12,9 +12,12 @@ from Reports.views import total_disaster_estimate
 Page routing and redirecting for the home page, account creation, login, and logout
 """
 
+##redirects user to the home screen
 def home(request):
     return render(request, 'home.html')
 
+##redirects user to the login page if account creation was successful or to the account creation page if
+##account creation failed
 def createaccount(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -29,6 +32,7 @@ def createaccount(request):
         form = CreateUserForm()
     return render(request, 'Accounts/createaccount.html', {'form': form})
 
+##redirects user to the home page if login was successful of the login page if login failed
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -39,10 +43,12 @@ def login(request):
         form = LoginForm()
     return render(request, 'Accounts/login.html', {'form': form})
 
+##logs out user and directs them to the home screen
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/home/')
 
+##redirects user to the formhistory page or the login page if the user is not logged in
 def formhistory(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')

@@ -153,9 +153,11 @@ class Report(models.Model):
     latitude=models.DecimalField(max_digits=15,decimal_places=10,default=-9999)
     longitude=models.DecimalField(max_digits=15,decimal_places=10,default=-9999)
 
+#coeficients for the individual damage model
 class individual_estimate_model_coefficients(models.Model):
     variable=models.CharField(max_length=50)
     coefficient=models.DecimalField(max_digits=20,decimal_places=8)
+
 
 class MapData():
     locations=[]
