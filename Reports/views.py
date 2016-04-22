@@ -56,7 +56,7 @@ def get_form(request):
                 category_id=Category.objects.filter(label=category)[0].id
                 form_category=FormCategory(form_id_id=report.id,category_id_id=category_id)
                 form_category.save()
-                return redirect('results',report.id)
+                return redirect('formhistory')
             else:
                 return render(request, 'form.html', {'form': form,'address_invalid':False,'address_duplicate':True})
     else:
@@ -258,34 +258,34 @@ def total_disaster_estimate(report):
             ## based on  damage estimate for hurricanes
             estl = 5425.08*30000
             estu = 5425.08*60000
-            return "Estimated total fema payout between %d and %d" % (estl,estu)
+            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
         elif rand > probBig and rand <= probBig + probMed:
             ## based on  damage estimate for hurricanes
             estl = 5425.08*10000
             estu = 5425.08*30000
-            return "Estimated total fema payout between %d and %d" % (estl,estu)
+            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
         else:
             ## based on  damage estimate for hurricanes
             estl = 5425.08*100
             estu = 5425.08*10000
-            return "Estimated total fema payout between %d and %d" % (estl,estu)
+            return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
 
     elif report.type_of_disaster == "Tornado":
         ## based on  damage estimate for tornados
         estl = 4410.958*380
         estu = 4410.958*1500
-        return "Estimated total fema payout between %d and %d" % (estl,estu)
+        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
 
     elif report.type_of_disaster == 'Earthquake':
         ## based on  damage estimate for earthquakes
         estl = 3305.191*3000
         estu = 3305.191*6000
-        return "Estimated total fema payout between %d and %d" % (estl,estu)
+        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
     else:
         ## based on  damage estimate for floods
         estl = 3564.974*100
         estu = 3564.974*6000
-        return "Estimated total fema payout between %d and %d" % (estl,estu)
+        return "Estimated total FEMA payout between $%d and $%d" % (estl,estu)
 
 #sets disaster number
 def disaster_number(report):
@@ -354,7 +354,7 @@ def edit_form(request,formid):
             category = calculate_category(report)
             category_id = Category.objects.filter(label=category)[0].id
             FormCategory.objects.filter(form_id_id=report.id).update(category_id_id=category_id)
-            return redirect('results',formid)
+            return redirect('formhistory')
 
     else:
         form=make_form(old_report)

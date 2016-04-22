@@ -10,12 +10,14 @@
     <col width="210">
     <col width="220">
     <col width="200">
+    <col width="200">
     <thead>
     <tr>
         <th>Date of disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Type of disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Address <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Estimated damage <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Estimated total damage for disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
         <th>Edit link <i class="fa fa-sort" aria-hidden="true"></i></th>
     </tr>
     </thead>
@@ -42,6 +44,9 @@
                     ${{ report.estimated_damage }}
                 {% endif %}
 
+            </td>
+            <td>
+                {{ report.total_damage }}
             </td>
             <td>
                 <a href="/form/{{ report.id }}">Link</a>

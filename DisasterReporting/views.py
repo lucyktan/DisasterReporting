@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from DisasterReporting.forms import CreateUserForm, LoginForm
 from Reports.models import Report
 import datetime
+from Reports.views import total_disaster_estimate
 
 """
 Page routing and redirecting for the home page, account creation, login, and logout
@@ -48,4 +49,5 @@ def formhistory(request):
     reports = Report.objects.filter(username=request.user.username)
     for report in reports:
         report.date_num=(report.date_of_disaster-datetime.datetime.utcfromtimestamp(0).date()).days
+        report.total_damage=total_disaster_estimate(report)
     return render(request,'Accounts/formhistory.html',{'reports':reports})
