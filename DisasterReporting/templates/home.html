@@ -2,17 +2,59 @@
 {% extends "base.html" %}
 
 {% block body %}
-<div id="content1" style="background-image:url(hurricane.jpg)">
-<!-- {% if user.is_authenticated %}
-    You are logged in.
-{% else %}
-    You are not logged in. 
-{% endif %} -->
+
+<link href='https://fonts.googleapis.com/css?family=Belleza' rel='stylesheet' type='text/css'>
+<div id="content1">
+	<img src="../static/hurricane.jpg" id="hurricane" alt="">
+	<section id="Home">
+		<div class="container">
+			<h1>How much would it take to recover your property from a natural disaster?</h1>
+		</div>
+	</section>
 </div>
 
 <style>
-#content1{
+.body{
+	background-size: 100% 100%;
+	background-size: cover;
+	background-attachment: fixed;
+	background-position: center top;
+	padding-bottom: 100px;
 }
+#content1{
+	margin-top: -50px;
+	margin-left: -30px;
+}
+#hurricane{
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	position: fixed;
+}
+#Home {
+	background-color: #ffffff;
+	opacity: 0.55;
+	width: 900px;
+	text-align: center;
+	padding: 0 auto 90px auto;
+	margin: 0 auto 0 auto;
+	top: 20%;
+	left: 10%;
+	right: 10%;
+	position: absolute;
+}
+.container {
+	width: 700px;
+	padding-top: 80px;
+	padding-bottom: 80px;
+	text-align: center;
+}
+.container h1{
+	color: #203470;
+	font-family: 'Belleza', sans-serif;
+	font-weight: 5em;
+}
+
 </style>
 
 {% endblock %}

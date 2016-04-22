@@ -3,17 +3,6 @@
 
 {% block body %}
 <div id="content1">
-{% if address_invalid %}
-<p class="address_error">The address you entered could not be found. Please check your spelling and try again.</p>
-{% endif %}
-{% if address_duplicate %}
-<p class="address_error">The address you entered has already been used for this disaster. Please check your spelling and try again. If you have used this address in the last 30 days, you can <a href="/formhistory/">edit</a> the form.</p>
-{% endif %}
-{% for field, errors in form.errors.items %}
-    {% for error in errors %}
-        <p class="address_error">There was an error with the {{ field }} question: {{ error }}</p>
-    {% endfor %}
-{% endfor %}
     <form method="post">
     {% csrf_token %}
     <!-- {{ form.as_p }} -->
@@ -25,11 +14,26 @@
     <li><a id="propertynav" data-toggle="pill" href="/form/#property">Property Information</a></li>
     <li><a id="damage1nav" data-toggle="pill" href="/form/#damage1">Damage Information I</a></li>
     <li><a id="damage2nav" data-toggle="pill" href="/form/#damage2">Damage Information II</a></li>
-    <li><a id="damage3nav" data-toggle="pill" href="/form/#damage3">Damage Information III</a></li>
-    <li><a id="damage4nav" data-toggle="pill" href="/form/#damage4">Damage Information IV</a></li>
+<!--     <li><a id="damage3nav" data-toggle="pill" href="/form/#damage3">Damage Information III</a></li>
+    <li><a id="damage4nav" data-toggle="pill" href="/form/#damage4">Damage Information IV</a></li> -->
 </ul>
 </div>
+
 <div class="tab-content col-md-3" style="width:70%">
+    <div id="errors" style="padding-left: 90px">
+        {% if address_invalid %}
+        <p class="address_error">The address you entered could not be found. Please check your spelling and try again.</p>
+        {% endif %}
+        {% if address_duplicate %}
+        <p class="address_error">The address you entered has already been used for this disaster. Please check your spelling and try again. If you have used this address in the last 30 days, you can <a href="/formhistory/">edit</a> the form.</p>
+        {% endif %}
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        <p class="address_error">There was an error with the {{ field }} question: {{ error }}</p>
+        {% endfor %}
+        {% endfor %}
+    </div>
+    
     <div id="personal" class="tab-pane fade in active">
         <h3>Personal Information</h3>
         <table id="personalinfo" style="width: 85%">
@@ -62,7 +66,9 @@
                 <td>{{ form.zipcode }}</td>
             </tr>
         </table>
-        <button type="button" class="btn btn-default next-button" data-nav="propertynav" style="display:block; margin: 10% 70% auto 30%">Next</button>
+        <div style="display:inline-block; text-align:justified; padding: 20px 0 0 200px">
+        <button type="button" class="btn btn-default next-button" data-nav="propertynav">Next</button>
+    </div>
     </div>
 
     <div id="property" class="tab-pane fade">
@@ -93,8 +99,10 @@
                 <td>{{ form.owned_less_than_30_years }}</td>
             </tr>
         </table>
-        <button type="button" class="btn btn-default previous-button" data-nav="personalnav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
-        <button type="button" class="btn btn-default next-button" data-nav="damage1nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
+        <div style="display:inline-block; text-align:justified; padding: 20px 0 0 200px">
+        <button type="button" class="btn btn-default previous-button" data-nav="personalnav">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage1nav">Next</button>
+    </div>
     </div>
 
     <div id="damage1" class="tab-pane fade">
@@ -120,8 +128,10 @@
             <tr><td>Is water between 3 inches and 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_major }}</td></tr>
             <tr><td>Is water greater than 5 feet on your first floor?</td><td>{{ form.water_conventionalhome_destroyed }}</td></tr>
         </table>
-        <button type="button" class="btn btn-default previous-button" data-nav="propertynav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
-        <button type="button" class="btn btn-default next-button" data-nav="damage2nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
+        <div style="display:inline-block; text-align:justified; padding: 20px 0 0 200px">
+        <button type="button" class="btn btn-default previous-button" data-nav="propertynav">Previous</button>
+        <button type="button" class="btn btn-default next-button" data-nav="damage2nav">Next</button>
+    </div>
     </div>
 
     <div id="damage2" class="tab-pane fade">
@@ -134,8 +144,10 @@
             <tr><td>Is there damage to landscaping?</td><td>{{ form.minor10_1 }}</td></tr>
             <tr><td>Is more than 50% of your home damaged?</td><td>{{ form.minor10_2 }}</td></tr>
         </table>
-        <button type="button" class="btn btn-default previous-button" data-nav="damage1nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
-        <button type="button" class="btn btn-default next-button" data-nav="damage3nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
+        <div style="display:inline-block; text-align:justified; padding: 20px 0 0 200px">
+        <button type="button" class="btn btn-default previous-button" data-nav="damage1nav">Previous</button>
+        <a class="btn btn-default" data-toggle="pill" href="/form/#damage3">Next</a>
+    </div>
     </div>
 
     <div id="damage3" class="tab-pane fade">
@@ -167,8 +179,11 @@
             <tr><td>Is the roof off or collapsed?</td><td>{{ form.major74_1 }}</td></tr>
             <tr><td>Are accessory outbuildings damaged?</td><td>{{ form.major74_2 }}</td></tr>
         </table>
-        <button type="button" class="btn btn-default previous-button" data-nav="damage2nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
-        <button type="button" class="btn btn-default next-button" data-nav="damage4nav" style="display:block; margin: 10% 70% auto 30%">Next</button>
+        <div style="display:inline-block; text-align:justified; padding: 20px 0 0 200px">
+        <!-- <button type="button" class="btn btn-default previous-button" data-nav="damage2nav">Previous</button> -->
+        <a class="btn btn-default" data-toggle="pill" href="/form/#damage2">Previous</a>
+        <a class="btn btn-default" data-toggle="pill" href="/form/#damage4">Next</a>
+        </div>
     </div>
 
     <div id="damage4" class="tab-pane fade">
@@ -188,8 +203,10 @@
             <tr><td>Is your home leveled above the foundation, and is the basement and foundation damaged?</td><td>{{ form.destroyed100_0 }}</td></tr>
             <tr><td>Is there flooding above the eaves (edge of the roof)?</td><td>{{ form.destroyed100_1 }}</td></tr>
         </table>
-        <button type="button" class="btn btn-default previous-button" data-nav="damage3nav" style="display:block; margin: 10% 70% auto 30%">Previous</button>
-        <input type="submit" value="Submit">
+        <div style="display:inline-block; text-align:left; padding: 20px 0 0 200px">
+        <a class="btn btn-default" data-toggle="pill" href="/form/#damage3">Previous</a>
+    </div>
+        <button type="button" class="btn btn-default" input type="submit" value="Submit">Submit</button>
     </div>  
 </div>
     
@@ -430,13 +447,10 @@ table, th, tr, td{
     $('.next-button').click(function () {
         var nav=$(this).attr('data-nav');
         $('#'+nav).click();
-        check_showing_questions();
     });
-
     $('.previous-button').click(function () {
         var nav=$(this).attr('data-nav');
         $('#'+nav).click();
-        check_showing_questions();
     });
 
 </script>
