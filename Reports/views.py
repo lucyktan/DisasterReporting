@@ -32,6 +32,7 @@ class Echo(object):
 
 """Renders the Report Damage form depending on whether the user is logged in"""
 
+## checks if form is valid. If valid, goes to results section
 def get_form(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
@@ -62,6 +63,7 @@ def get_form(request):
 
     return render(request, 'form.html', {'form': form,'address_invalid':False})
 
+#checks if address was used in the las 30 days
 def unique_address(report):
     inpDate = report.date_of_disaster
     start = inpDate + datetime.timedelta(days=-DISASTER_TIME_CONSTANT)
@@ -72,6 +74,7 @@ def unique_address(report):
     else:
         return 1
 
+## estimates home value if no value was given
 def estimate_home_value(report):
     if report.predisaster_value == 0 or report.predisaster_value is None:
         if homevalue.objects.raw('SELECT id, count(zipcode) as c FROM disaster.reports_homevalue WHERE zipcode = %s',[int(report.zipcode)])[0].c >0:
@@ -82,6 +85,7 @@ def estimate_home_value(report):
     else:
        return decimal.Decimal(report.predisaster_value)
 
+##calculates the estimated FEMA reimbursement for the indiviudal
 def calculate_individual_damage_estimate(report):
     coefficients=individual_estimate_model_coefficients.objects.all()
     cur_sum=decimal.Decimal(0.0)
@@ -298,6 +302,7 @@ def disaster_number(report):
    else:
         return Report.objects.filter(date_of_disaster__range = (start,end), state = inpState, type_of_disaster = inpDisType)[0].fema_disaster_number
 
+#returns the damage category for the individual's home
 def calculate_category(report):
     if report.destroyed100_0 == '1' or report.destroyed100_1 == '1':
         return '91-100%'
@@ -327,6 +332,7 @@ def calculate_category(report):
         return 'Minor to 10%'
     return 'None'
 
+##allows user to edit a previously submitted form
 def edit_form(request,formid):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
@@ -358,6 +364,7 @@ def edit_form(request,formid):
         form=make_form(old_report)
         return render(request, 'form.html', {'form': form,'address_invalid':False})
 
+# Returns value from a previous form
 def make_form(old_report):
     data=vars(old_report)
     for key,val in data.iteritems():
@@ -365,6 +372,7 @@ def make_form(old_report):
             data[key] = False
     return DisasterForm(initial=data)
 
+# updates old report to the new report
 def update_report(new_report):
     return {'first_name' : new_report.first_name,
 'last_name' : new_report.last_name,
@@ -444,6 +452,7 @@ def update_report(new_report):
 'perDam':new_report.perDam
 }
 
+##makes the report from the form
 def make_report(form):
     lat,lng=get_location(form.cleaned_data['street_address'],form.cleaned_data['city'],form.cleaned_data['state'],form.cleaned_data['zipcode'])
     return Report(first_name=form.cleaned_data['first_name'],

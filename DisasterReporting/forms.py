@@ -8,6 +8,7 @@ Forms for account creation and login
 Modified from an opensourced project whiteboard on GitHub
 """
 
+# creates new user
 class CreateUserForm(forms.Form):
     email = forms.EmailField(label='Email',max_length=254)
     password = forms.CharField(label='Password',widget=forms.PasswordInput)
@@ -15,6 +16,7 @@ class CreateUserForm(forms.Form):
     first_name = forms.CharField(label='First name',max_length=100)
     last_name = forms.CharField(label='Last name',max_length=100)
 
+    ##checks email and password are valid
     def clean(self):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
@@ -25,6 +27,7 @@ class CreateUserForm(forms.Form):
             raise forms.ValidationError("Passwords do not match ")
         return self.cleaned_data
 
+    ##creates new user account
     def create_new_account(self, request):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
@@ -40,10 +43,12 @@ class CreateUserForm(forms.Form):
         new_account.save()
         return user 
 
+##allows user to login
 class LoginForm(forms.Form):
     email = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput)
 
+    # verifies email and password information
     def clean(self):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
@@ -52,6 +57,7 @@ class LoginForm(forms.Form):
             raise forms.ValidationError("Incorrect Account Information")
         return self.cleaned_data
 
+    ## lets user login to account
     def login(self, request):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
