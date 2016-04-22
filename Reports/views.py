@@ -620,16 +620,83 @@ def show_results(request,id=None):
     return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate,'show_estimate':show_estimate})
 
 def get_summaries(request):
-    if request.method != 'POST':
-        l=list()
-        disaster_numbers=[num[0] for num in Report.objects.values_list('fema_disaster_number').distinct()]
-        disaster_numbers.insert(0,'All')
-        return render(request,'summaries.html',{'disaster_numbers':disaster_numbers})
-    num = request.POST['disaster_number']
-    if num == 'All':
+    state_abbrevs = {
+            'AK': 'Alaska',
+            'AL': 'Alabama',
+            'AR': 'Arkansas',
+            'AS': 'American Samoa',
+            'AZ': 'Arizona',
+            'CA': 'California',
+            'CO': 'Colorado',
+            'CT': 'Connecticut',
+            'DC': 'District of Columbia',
+            'DE': 'Delaware',
+            'FL': 'Florida',
+            'GA': 'Georgia',
+            'GU': 'Guam',
+            'HI': 'Hawaii',
+            'IA': 'Iowa',
+            'ID': 'Idaho',
+            'IL': 'Illinois',
+            'IN': 'Indiana',
+            'KS': 'Kansas',
+            'KY': 'Kentucky',
+            'LA': 'Louisiana',
+            'MA': 'Massachusetts',
+            'MD': 'Maryland',
+            'ME': 'Maine',
+            'MI': 'Michigan',
+            'MN': 'Minnesota',
+            'MO': 'Missouri',
+            'MP': 'Northern Mariana Islands',
+            'MS': 'Mississippi',
+            'MT': 'Montana',
+            'NA': 'National',
+            'NC': 'North Carolina',
+            'ND': 'North Dakota',
+            'NE': 'Nebraska',
+            'NH': 'New Hampshire',
+            'NJ': 'New Jersey',
+            'NM': 'New Mexico',
+            'NV': 'Nevada',
+            'NY': 'New York',
+            'OH': 'Ohio',
+            'OK': 'Oklahoma',
+            'OR': 'Oregon',
+            'PA': 'Pennsylvania',
+            'PR': 'Puerto Rico',
+            'RI': 'Rhode Island',
+            'SC': 'South Carolina',
+            'SD': 'South Dakota',
+            'TN': 'Tennessee',
+            'TX': 'Texas',
+            'UT': 'Utah',
+            'VA': 'Virginia',
+            'VI': 'Virgin Islands',
+            'VT': 'Vermont',
+            'WA': 'Washington',
+            'WI': 'Wisconsin',
+            'WV': 'West Virginia',
+            'WY': 'Wyoming'
+    }
+    disaster_numbers=[(num.fema_disaster_number,num.type_of_disaster,state_abbrevs[num.state] if len(num.state) == 2 else num.state, num.date_of_disaster, (num.date_of_disaster-datetime.datetime.utcfromtimestamp(0).date()).days) for num in Report.objects.raw('SELECT MIN(ID) as id,fema_disaster_number,type_of_disaster,state,MIN(date_of_disaster) as date_of_disaster FROM disaster.reports_report GROUP BY fema_disaster_number,type_of_disaster,state')]
+    disaster_numbers.sort(key=lambda tup: tup[0])
+    disaster_numbers.insert(0,('All','All','All','All',0))
+    disaster_numbers_by_type={}
+    for disaster_number in disaster_numbers:
+        if disaster_number[0]=='All':
+            continue
+        key = disaster_number[1].title() if disaster_number[1] != 'Severe Storm(s)' else 'Severe Storm(s)'
+        if not key in disaster_numbers_by_type:
+            disaster_numbers_by_type[key] = []
+        disaster_numbers_by_type[key].append(disaster_number)
+    return render(request,'summaries.html',{'disaster_numbers':disaster_numbers,'disaster_numbers_by_type':disaster_numbers_by_type})
+
+def download_summary(request, id):
+    if id == 'All':
         data=Report.objects.values_list('zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'perDam', 'estimated_damage', 'fema_disaster_number')
     else:
-        data=Report.objects.values_list('zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'perDam', 'estimated_damage', 'fema_disaster_number').filter(fema_disaster_number=num)
+        data=Report.objects.values_list('zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'perDam', 'estimated_damage', 'fema_disaster_number').filter(fema_disaster_number=id)
 
     rows = [(idx,)+data[idx] for idx in range(len(data))]
     pseudo_buffer = Echo()
@@ -637,5 +704,5 @@ def get_summaries(request):
     rows.insert(0,('id','zipcode', 'type_of_residence', 'type_of_occupancy', 'type_of_disaster', 'date_of_disaster', 'insured', 'mortgage', 'owned_less_than_30_years', 'predisaster_value', 'water_damage', 'water_mobilehome', 'water_mobilehome_minor', 'water_mobilehome_major_plywood', 'water_mobilehome_major_plywood_yes', 'water_mobilehome_major_nonplywood', 'water_mobilehome_destroyed', 'water_conventionalhome_minor', 'water_conventionalhome_major', 'water_conventionalhome_destroyed', 'sewage', 'minor10_0', 'minor10_1', 'minor10_2', 'major20_0', 'major20_1', 'major20_2', 'major30_0', 'major30_1', 'major30_2', 'major30_3', 'major40_0', 'major40_1', 'major40_2', 'major50_0', 'major50_1', 'major50_2', 'major60_0', 'major60_1', 'major74_0', 'major74_1', 'major74_2', 'destroyed80_0', 'destroyed80_1', 'destroyed80_2', 'destroyed80_3', 'destroyed80_4', 'destroyed90_0', 'destroyed90_1', 'destroyed100_0', 'destroyed100_1', 'percent_damaged', 'estimated_damage', 'disaster_number'))
     response = StreamingHttpResponse((writer.writerow(row) for row in rows),
                                      content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="disaster_summary_'+str(num)+'.csv"'
+    response['Content-Disposition'] = 'attachment; filename="disaster_summary_'+str(id)+'.csv"'
     return response

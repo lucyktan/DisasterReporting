@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from DisasterReporting.forms import CreateUserForm, LoginForm
 from Reports.models import Report
+import datetime
 
 """
 Page routing and redirecting for the home page, account creation, login, and logout
@@ -45,4 +46,6 @@ def formhistory(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
     reports = Report.objects.filter(username=request.user.username)
+    for report in reports:
+        report.date_num=(report.date_of_disaster-datetime.datetime.utcfromtimestamp(0).date()).days
     return render(request,'Accounts/formhistory.html',{'reports':reports})

@@ -2,25 +2,80 @@
 {% extends "base.html" %}
 
 {% block body %}
-
 <div id="content1">
-	<form method="post">
-    {% csrf_token %}
-    <select name="disaster_number">
-        {% for disaster_number in disaster_numbers %}
-            <option value="{{ disaster_number }}">{{ disaster_number }}</option>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">All</a></li>
+        {% for type in disaster_numbers_by_type %}
+            <li><a data-toggle="tab" href="#type-{{ forloop.counter0 }}">{{ type }}</a></li>
         {% endfor %}
-    </select>
-    <input type="submit" value="Submit" style="text-align: center"/>
-</form>
+    </ul>
+<div class="tab-content">
+<div id="home" class="tab-pane fade in active">
+    <table class="sortable">
+        <col width="180">
+        <col width="210">
+        <col width="220">
+        <col width="200">
+        <thead>
+            <tr>
+                <th>Disaster number <i class="fa fa-sort" aria-hidden="true"></i></th>
+                <th>Type of disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
+                <th>State <i class="fa fa-sort" aria-hidden="true"></i></th>
+                <th class="sorttable_numeric">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for disaster_number in disaster_numbers %}
+                <tr>
+                    <td>
+                        <a href="/downloads/disaster_{{ disaster_number.0 }}">{{ disaster_number.0 }}</a>
+                    </td>
+                    <td>{{ disaster_number.1 }}</td>
+                    <td>{{ disaster_number.2 }}</td>
+                    <td sorttable_custom_key="{{ disaster_number.4 }}">{{ disaster_number.3 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
+        {% for type, value in disaster_numbers_by_type.iteritems %}
+            <div id="type-{{ forloop.counter0 }}" class="tab-pane fade">
+                <table class="sortable">
+                    <thead>
+                        <tr>
+                            <th>Disaster number <i class="fa fa-sort" aria-hidden="true"></i></th>
+                            <th>State <i class="fa fa-sort" aria-hidden="true"></i></th>
+                            <th class="sorttable_numeric">Date <i class="fa fa-sort" aria-hidden="true"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tuple in value %}
+                            <tr>
+                                <td>
+                                    <a href="/downloads/disaster_{{ tuple.0 }}">{{ tuple.0 }}</a>
+                                </td>
+                                <td>{{ tuple.2 }}</td>
+                                <td sorttable_custom_key="{{ tuple.4 }}">{{ tuple.3 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+</div>
+</div>
 <style>
+table{
+    margin: 30px auto auto auto;
+}
+table, tr, td, th{
+    border: 10px solid white;
+}
 
 #content1{
 }
-
+th span{
+    display: none;
+}
 </style>
-
 {% endblock %}
-

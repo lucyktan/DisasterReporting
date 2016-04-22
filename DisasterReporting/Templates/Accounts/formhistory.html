@@ -5,24 +5,24 @@
 
 <div id="content1">
     <h4 style="text-align: center; margin: 3% auto 0 auto">Your Submitted Reports</h4>
-<table id="history">
+<table class="sortable" id="history">
     <col width="180">
     <col width="210">
     <col width="220">
     <col width="200">
     <thead>
     <tr>
-        <th>Date of disaster</th>
-        <th>Type of disaster</th>
-        <th>Address</th>
-        <th>Estimated damage</th>
-        <th>Edit link</th>
+        <th>Date of disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Type of disaster <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Address <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Estimated damage <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <th>Edit link <i class="fa fa-sort" aria-hidden="true"></i></th>
     </tr>
     </thead>
     <tbody>
     {% for report in reports %}
         <tr>
-            <td>
+            <td sorttable_custom_key="{{ report.date_num }}">
                 {{ report.date_of_disaster }}
             </td>
             <td>
