@@ -15,6 +15,7 @@ from Reports.models import Category
 from forms import DisasterForm
 from DisasterReporting.settings import GOOGLE_API_KEY as key
 from DisasterReporting.settings import DISASTER_TIME_CONSTANT
+from DisasterReporting.settings import MAP_RECENT_DAYS
 import urllib2
 import urllib
 import json
@@ -532,20 +533,23 @@ destroyed100_1 = form.cleaned_data['destroyed100_1'],
 latitude=lat,
 longitude=lng)
 
-def get_locations(disaster_num):
-    latlongs=Report.objects.filter(fema_disaster_number=disaster_num).values('id','latitude','longitude')
+def get_locations(disaster_num, is_date_range=False):
+    if not is_date_range:
+        latlongs=Report.objects.filter(fema_disaster_number=disaster_num)
+    else:
+        latlongs=Report.objects.filter(date_of_disaster__gte=datetime.date.today()-datetime.timedelta(days=MAP_RECENT_DAYS))
     labels=[]
     map_labels=[]
     lats=[]
     lngs=[]
     for latlong in latlongs:
-        id=latlong['id']
+        id=latlong.id
         try:
             category=FormCategory.objects.get(pk=id).category_id
             labels.append(category.label)
             map_labels.append(category.map_label)
-            lat=latlong['latitude']
-            lng=latlong['longitude']
+            lat=latlong.latitude
+            lng=latlong.longitude
             lats.append(round(lat,3))
             lngs.append(round(lng,3))
         except:
@@ -562,12 +566,15 @@ def get_location(street_address,city,state,zipcode):
     lng=data['results'][0]['geometry']['location']['lng']
     return round(lat,10),round(lng,10)
 
-def get_zip_code_damages(disaster_num):
+def get_zip_code_damages(disaster_num, is_date_range=False):
     zip_codes={'minor':[],'major':[],'destroyed':[]}
     minor=0
     major=1
     destroyed=7
-    zips = Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.fema_disaster_number = ' + str(disaster_num) + ' AND R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id WHERE C.label<>\'None\' GROUP BY zipcode')
+    if not is_date_range:
+        zips = Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.fema_disaster_number = ' + str(disaster_num) + ' AND R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id WHERE C.label<>\'None\' GROUP BY zipcode')
+    else:
+        zips=Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,MAX(C.map_label) AS damage FROM disaster.reports_report R INNER JOIN disaster.reports_formcategory FC ON R.date_of_disaster>=DATE_SUB(NOW(), INTERVAL ' + str(MAP_RECENT_DAYS) + ' DAY) AND R.id=FC.form_id_id INNER JOIN disaster.reports_category C ON FC.category_id_id=C.id WHERE C.label<>\'None\' GROUP BY zipcode')
     for zip in zips:
         if int(zip.damage)>=destroyed:
              zip_codes['destroyed'].append(zip.zipcode)
@@ -577,12 +584,15 @@ def get_zip_code_damages(disaster_num):
              zip_codes['minor'].append(zip.zipcode)
     return zip_codes
 
-def get_zip_code_num_reports(disaster_num):
+def get_zip_code_num_reports(disaster_num, is_date_range=False):
     zip_codes={'few':[],'several':[],'many':[]}
     few=1
     several=2
     many=4
-    zips = Report.objects.raw('SELECT MIN(id) AS id,zipcode,COUNT(*) AS num_reports FROM disaster.reports_report WHERE fema_disaster_number = ' + str(disaster_num) + ' GROUP BY zipcode')
+    if not is_date_range:
+        zips = Report.objects.raw('SELECT MIN(id) AS id,zipcode,COUNT(*) AS num_reports FROM disaster.reports_report WHERE fema_disaster_number = ' + str(disaster_num) + ' GROUP BY zipcode')
+    else:
+        zips=Report.objects.raw('SELECT MIN(R.id) AS id,R.zipcode,COUNT(*) AS num_reports FROM disaster.reports_report R WHERE R.date_of_disaster>=DATE_SUB(NOW(), INTERVAL ' + str(MAP_RECENT_DAYS) + ' DAY) GROUP BY R.zipcode')
     for zip in zips:
         if zip.num_reports>=many:
              zip_codes['many'].append(zip.zipcode)
@@ -607,8 +617,16 @@ def show_results(request,id=None):
             map_data.zoom = 11
     if report is None:
         try:
-            report=Report.objects.all().last()
+            map_data.latitude=39.833333
+            map_data.longitude=-98.583333
+            map_data.locations=get_locations(None,True)
+            map_data.zoom=5
+            map_data.zip_code_damages=get_zip_code_damages(None,True)
+            map_data.zip_code_num_reports=get_zip_code_num_reports(None,True)
+            total_estimate = ''
+            return render(request, 'results.html',{'map_data': map_data,'estimate':'0.00','total':total_estimate,'show_estimate':False})
         except:
+            raise
             labels=[]
             map_labels=[]
             lats=[]
@@ -619,14 +637,10 @@ def show_results(request,id=None):
             return render(request, 'results.html',{'map_data': map_data,'estimate':'0.00','total':'','show_estimate':False})
         map_data.latitude = report.latitude
         map_data.longitude = report.longitude
-    show_estimate=False
-    if request.user.is_authenticated() and request.user.username == report.username:
-        show_estimate=True
     map_data.locations=get_locations(report.fema_disaster_number)
     map_data.zip_code_damages=get_zip_code_damages(report.fema_disaster_number)
     map_data.zip_code_num_reports=get_zip_code_num_reports(report.fema_disaster_number)
-    total_estimate = total_disaster_estimate(report)
-    return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':total_estimate,'show_estimate':show_estimate})
+    return render(request, 'results.html',{'map_data': map_data,'estimate':report.estimated_damage,'total':'','show_estimate':False})
 
 def get_summaries(request):
     state_abbrevs = {

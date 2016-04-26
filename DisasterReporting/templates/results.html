@@ -64,22 +64,6 @@
             title: title
         });
     }
-    function check_zoom() {
-        zoomLevel = map.getZoom();
-        console.log(zoomLevel);
-        if (zoomLevel >= 6) {
-            if($(this).text()=='Show map of damages'){
-                layer_d.setMap(null);
-                layer_nr.setMap(map);
-            }else{
-                layer_nr.setMap(null);
-                layer_d.setMap(map);
-            }
-        } else {
-            layer_d.setMap(null);
-            layer_nr.setMap(null);
-        }
-    }
     function initMap() {
         var myLatLng = {lat: {{ map_data.latitude }}, lng: {{map_data.longitude }}};
         map = new google.maps.Map(document.getElementById('map'), {
@@ -189,14 +173,49 @@
             $('#estimate').show();
         }
     });
+    function check_zoom_text(text) {
+        zoomLevel = map.getZoom();
+        console.log(zoomLevel);
+        if (zoomLevel >= 8) {
+            if(text!='Map of Damage Severity'){
+                layer_d.setMap(null);
+                layer_nr.setMap(map);
+            }else{
+                layer_nr.setMap(null);
+                layer_d.setMap(map);
+            }
+        } else {
+            layer_d.setMap(null);
+            layer_nr.setMap(null);
+        }
+    }
+    function check_zoom() {
+        zoomLevel = map.getZoom();
+        console.log(zoomLevel);
+        if (zoomLevel >= 8) {
+            var text=$('.active .tab-click').text();
+            if(text!='Map of Damage Severity'){
+                layer_d.setMap(null);
+                layer_nr.setMap(map);
+            }else{
+                layer_nr.setMap(null);
+                layer_d.setMap(map);
+            }
+        } else {
+            layer_d.setMap(null);
+            layer_nr.setMap(null);
+        }
+    }
     $('.tab-click').click(function () {
-       if($(this).text()==='Map of Damage Severity'){
+        var text=$(this).text()
+       if(text==='Map of Damage Severity'){
            layer_nr.setMap(null);
            layer_d.setMap(map);
        }else {
            layer_d.setMap(null);
            layer_nr.setMap(map);
        }
+        check_zoom_text(text);
     });
     $('#toggle').click(function(){
         if($(this).text()=='Show map of report frequencies'){

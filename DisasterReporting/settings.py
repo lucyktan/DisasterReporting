@@ -76,6 +76,8 @@ GOOGLE_API_KEY='AIzaSyBOquNNSRQxs7qwnPE9sIXvdWE2TTpwYwc'
 
 DISASTER_TIME_CONSTANT=30
 
+MAP_RECENT_DAYS=90
+
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
